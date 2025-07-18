@@ -1,0 +1,99 @@
+<svg width="400" height="120" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <style>
+        /* Default styles */
+        .container { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+        }
+        .background { 
+            fill: #1a1a1a; 
+        }
+        .title { 
+            font-size: 18px; 
+            font-weight: 600; 
+            fill: #E1E1E1; 
+        }
+        .artist { 
+            font-size: 14px; 
+            fill: #B3B3B3; 
+        }
+        .album { 
+            font-size: 12px; 
+            fill: #888888; 
+        }
+        .status-playing { 
+            fill: #1ed760; 
+        }
+        .status-paused { 
+            fill: #888888; 
+        }
+        .no-media { 
+            font-size: 16px; 
+            fill: #888888; 
+            text-anchor: middle; 
+        }
+        
+        /* User custom CSS will be injected here */
+        {{ custom_css | safe }}
+    </style>
+    
+    <!-- Background -->
+    <rect width="400" height="120" class="background" />
+    
+    <g class="container">
+        {% if media_info and media_info.title %}
+            {% if media_info.album_art_b64 %}
+                <!-- Album art -->
+                <image href="data:image/png;base64,{{ media_info.album_art_b64 }}" 
+                       x="10" y="10" height="100" width="100" />
+                
+                <!-- Text with album art -->
+                <text x="125" y="35" class="title">                        
+                    {% set max_title_length = 25 %}
+                    {% if media_info.title|length > max_title_length %}
+                        {{ media_info.title[:max_title_length] }}...
+                    {% else %}
+                        {{ media_info.title }}
+                    {% endif %}
+                </text>
+                <text x="125" y="55" class="artist">
+                    {% set max_artist_length = 40 %}
+                    {% if media_info.artist|length > max_artist_length %}
+                        {{ media_info.artist[:max_artist_length] }}...
+                    {% else %}
+                        {{ media_info.artist }}
+                    {% endif %}                
+                </text>
+                <text x="125" y="75" class="album">
+                    {% set max_album_length = 30 %}
+                    {% if media_info.album|length > max_album_length %}
+                        {{ media_info.album[:max_album_length] }}...
+                    {% else %}
+                        {{ media_info.album }}
+                    {% endif %}
+                </text>
+                
+                <!-- Status indicator -->
+                {% if media_info.is_playing %}
+                    <circle cx="380" cy="105" r="5" class="status-playing" />
+                {% else %}
+                    <circle cx="380" cy="105" r="5" class="status-paused" />
+                {% endif %}
+            {% else %}
+                <!-- Text without album art -->
+                <text x="20" y="40" class="title">{{ media_info.title }}</text>
+                <text x="20" y="60" class="artist">{{ media_info.artist }}</text>
+                <text x="20" y="80" class="album">{{ media_info.album }}</text>
+                
+                <!-- Status indicator -->
+                {% if media_info.is_playing %}
+                    <circle cx="380" cy="105" r="5" class="status-playing" />
+                {% else %}
+                    <circle cx="380" cy="105" r="5" class="status-paused" />
+                {% endif %}
+            {% endif %}
+        {% else %}
+            <!-- No media playing -->
+            <text x="200" y="65" class="no-media">No music playing</text>
+        {% endif %}
+    </g>
+</svg>

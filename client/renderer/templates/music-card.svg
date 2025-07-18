@@ -1,0 +1,115 @@
+<svg width="320" height="400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-labelledby="cardTitle" role="img">
+  <title id="cardTitle">Now Playing Music Card</title>
+  
+  <defs>
+    <!-- Gradient for background -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#121212;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Drop shadow filter -->
+    <filter id="dropshadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="2" result="offset" />
+      <feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+      <feMerge> 
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
+    
+    <!-- Album art mask -->
+    <clipPath id="albumArtMask">
+      <rect x="10" y="70" width="300" height="300" rx="5" ry="5"/>
+    </clipPath>
+  </defs>
+  
+  <style>
+    .container {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    
+    .card-background {
+      fill: url(#bgGradient);
+      filter: url(#dropshadow);
+    }
+    
+    .no-media {
+      fill: #64748b;
+      font-size: 18px;
+      font-weight: 500;
+      text-anchor: middle;
+    }
+    
+    .artist {
+      fill: #fff;
+      font-weight: bold;
+      font-size: 20px;
+      text-anchor: middle;
+    }
+    
+    .song {
+      fill: #b3b3b3;
+      font-size: 16px;
+      text-anchor: middle;
+    }
+    
+    @keyframes sound {
+      0% { opacity: 0.35; transform: scaleY(0.1); }
+      100% { opacity: 1; transform: scaleY(1); }
+    }
+    
+    /* User custom CSS will be injected here */
+    {{ custom_css | safe }}
+  </style>
+  
+  <!-- Card background with rounded corners -->
+  <rect width="320" height="400" rx="10" ry="10" class="card-background" />
+  
+  <g class="container">
+    {% if media_info and media_info.title %}
+      <!-- Artist name -->
+      <text x="160" y="30" class="artist">
+        {% set max_artist_length = 18 %}
+        {% if media_info.artist and media_info.artist|length > max_artist_length %}
+          {{ media_info.artist[:max_artist_length] }}...
+        {% else %}
+          {{ media_info.artist or '未知艺术家' }}
+        {% endif %}
+      </text>
+      
+      <!-- Song title -->
+      <text x="160" y="55" class="song">
+        {% set max_title_length = 22 %}
+        {% if media_info.title|length > max_title_length %}
+          {{ media_info.title[:max_title_length] }}...
+        {% else %}
+          {{ media_info.title }}
+        {% endif %}
+      </text>
+
+      <!-- Album art -->
+      {% if media_info.album_art_b64 %}
+        <image href="data:image/png;base64,{{ media_info.album_art_b64 }}" 
+               x="10" y="70" width="300" height="300" 
+               clip-path="url(#albumArtMask)" />
+      {% elif media_info.album_art %}
+        <image href="{{ media_info.album_art }}" 
+               x="10" y="70" width="300" height="300" 
+               clip-path="url(#albumArtMask)" />
+      {% else %}
+        <!-- Music icon placeholder -->
+        <rect x="10" y="70" width="300" height="300" rx="5" ry="5" 
+              fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+        <path d="M140 150 L140 230 L150 225 L150 145 L180 140 L180 220 L190 215 L190 135 Z" 
+              fill="rgba(255,255,255,0.3)" />
+      {% endif %}
+    {% else %}
+      <!-- No media playing message -->
+      <text x="160" y="200" class="no-media">
+        No music playing
+      </text>
+    {% endif %}
+  </g>
+</svg>

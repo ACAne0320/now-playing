@@ -1,0 +1,153 @@
+<svg width="400" height="120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- Neo background -->
+        <linearGradient id="neoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+        </linearGradient>
+        
+        <!-- Neo shadow -->
+        <filter id="neoShadow">
+            <feDropShadow dx="4" dy="4" stdDeviation="8" flood-color="#cbd5e1" flood-opacity="0.8"/>
+            <feDropShadow dx="-4" dy="-4" stdDeviation="8" flood-color="#ffffff" flood-opacity="0.9"/>
+        </filter>
+        
+        <!-- Inner shadow -->
+        <filter id="innerShadow">
+            <feDropShadow dx="2" dy="2" stdDeviation="4" flood-color="#cbd5e1" flood-opacity="0.6"/>
+            <feDropShadow dx="-2" dy="-2" stdDeviation="4" flood-color="#ffffff" flood-opacity="0.8"/>
+        </filter>
+        
+        <!-- Album art mask -->
+        <clipPath id="neoMask">
+            <rect x="25" y="25" width="70" height="70" rx="12" ry="12"/>
+        </clipPath>
+    </defs>
+    
+    <style>
+        .container { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+        }
+        .background { 
+            fill: url(#neoGradient); 
+        }
+        .neo-card { 
+            fill: url(#neoGradient); 
+            filter: url(#neoShadow);
+        }
+        .title { 
+            font-size: 16px; 
+            font-weight: 700; 
+            fill: #1e293b; 
+        }
+        .artist { 
+            font-size: 14px; 
+            font-weight: 500;
+            fill: #475569; 
+        }
+        .album { 
+            font-size: 12px; 
+            font-weight: 400;
+            fill: #64748b; 
+        }
+        .status-button { 
+            filter: url(#innerShadow);
+        }
+        .status-playing { 
+            fill: #10b981; 
+        }
+        .status-paused { 
+            fill: #f59e0b; 
+        }
+        .no-media { 
+            font-size: 16px; 
+            font-weight: 600;
+            fill: #64748b; 
+            text-anchor: middle; 
+        }
+        .neo-album-placeholder {
+            fill: url(#neoGradient);
+            filter: url(#innerShadow);
+        }
+        .music-icon {
+            fill: #94a3b8;
+        }
+        .divider {
+            stroke: #cbd5e1;
+            stroke-width: 1;
+        }
+        
+        /* User custom CSS will be injected here */
+        {{ custom_css | safe }}
+    </style>
+    
+    <!-- Background -->
+    <rect width="400" height="120" class="background" />
+    
+    <!-- Neo card -->
+    <rect x="15" y="15" width="370" height="90" rx="16" ry="16" class="neo-card" />
+    
+    <g class="container">
+        {% if media_info and media_info.title %}
+            {% if media_info.album_art_b64 %}
+                <!-- Album art -->
+                <image href="data:image/png;base64,{{ media_info.album_art_b64 }}" 
+                       x="25" y="25" height="70" width="70" 
+                       clip-path="url(#neoMask)" />
+            {% else %}
+                <!-- Neo placeholder -->
+                <rect x="25" y="25" width="70" height="70" rx="12" ry="12" 
+                      class="neo-album-placeholder" />
+                <text x="60" y="68" class="music-icon" text-anchor="middle" font-size="20">♪</text>
+            {% endif %}
+            
+            <!-- Divider -->
+            <line x1="105" y1="30" x2="105" y2="90" class="divider" />
+            
+            <!-- Text content -->
+            <text x="120" y="42" class="title">
+                {% set max_title_length = 22 %}
+                {% if media_info.title|length > max_title_length %}
+                    {{ media_info.title[:max_title_length] }}...
+                {% else %}
+                    {{ media_info.title }}
+                {% endif %}
+            </text>
+            <text x="120" y="60" class="artist">
+                {% set max_artist_length = 28 %}
+                {% if media_info.artist|length > max_artist_length %}
+                    {{ media_info.artist[:max_artist_length] }}...
+                {% else %}
+                    {{ media_info.artist }}
+                {% endif %}
+            </text>
+            {% if media_info.album %}
+            <text x="120" y="76" class="album">
+                {% set max_album_length = 30 %}
+                {% if media_info.album|length > max_album_length %}
+                    {{ media_info.album[:max_album_length] }}...
+                {% else %}
+                    {{ media_info.album }}
+                {% endif %}
+            </text>
+            {% endif %}
+            
+            <!-- Status button -->
+            {% if media_info.is_playing %}
+                <rect x="350" y="25" width="25" height="25" rx="6" ry="6" 
+                      class="status-button status-playing" />
+                <text x="364" y="42" style="font-size: 12px; fill: white; text-anchor: middle;">▶</text>
+            {% else %}
+                <rect x="350" y="25" width="25" height="25" rx="6" ry="6" 
+                      class="status-button status-paused" />
+                <text x="364" y="42" style="font-size: 12px; fill: white; text-anchor: middle;">⏸</text>
+            {% endif %}
+        {% else %}
+            <!-- No media playing -->
+            <rect x="180" y="45" width="40" height="40" rx="8" ry="8" 
+                  class="neo-album-placeholder" />
+            <text x="200" y="68" class="music-icon" text-anchor="middle" font-size="16">♪</text>
+            <text x="200" y="90" class="no-media">No music playing</text>
+        {% endif %}
+    </g>
+</svg>

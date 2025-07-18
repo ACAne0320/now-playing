@@ -1,0 +1,129 @@
+<svg width="400" height="120" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <!-- 圆角遮罩 -->
+        <mask id="roundedMask">
+            <rect width="400" height="120" rx="12" ry="12" fill="white"/>
+        </mask>
+        
+        <!-- 专辑封面圆角遮罩 -->
+        <mask id="albumMask">
+            <rect x="15" y="15" width="90" height="90" rx="8" ry="8" fill="white"/>
+        </mask>
+    </defs>
+    
+    <style>
+        .container { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; 
+        }
+        .background { 
+            fill: #1a1a1a; 
+        }
+        .title { 
+            font-size: 20px; 
+            font-weight: 700; 
+            fill: #ffffff; 
+        }
+        .artist { 
+            font-size: 16px; 
+            fill: #b3b3b3; 
+        }
+        .status-playing { 
+            fill: #1ed760; 
+        }
+        .status-paused { 
+            fill: #888888; 
+        }
+        .status-text { 
+            font-size: 13px; 
+            font-weight: 500;
+            text-anchor: end;
+        }
+        .status-text-playing { 
+            fill: #1ed760; 
+        }
+        .status-text-paused { 
+            fill: #888888; 
+        }
+        .no-media { 
+            font-size: 18px; 
+            fill: #666666; 
+            text-anchor: middle; 
+        }
+        .album-placeholder { 
+            fill: #333333; 
+            stroke: #555555; 
+            stroke-width: 2;
+        }
+        .music-icon { 
+            fill: #666666; 
+            font-size: 32px; 
+            text-anchor: middle; 
+            dominant-baseline: central;
+        }
+        
+        /* 用户自定义CSS */
+        {{ custom_css | safe }}
+    </style>
+    
+    <!-- 应用圆角 -->
+    <g mask="url(#roundedMask)">
+        <!-- 背景 -->
+        <rect width="400" height="120" class="background" />
+        
+        <g class="container">
+            {% if media_info and media_info.title %}
+                <!-- 左侧：专辑封面 -->
+                {% if media_info.album_art_b64 %}
+                    <image href="data:image/png;base64,{{ media_info.album_art_b64 }}" 
+                           x="15" y="15" width="90" height="90" 
+                           mask="url(#albumMask)"/>
+                {% else %}
+                    <!-- 占位符 -->
+                    <rect x="15" y="15" width="90" height="90" 
+                          rx="8" ry="8" class="album-placeholder"/>
+                    <text x="60" y="60" class="music-icon">♪</text>
+                {% endif %}
+                
+                <!-- 右侧：文本信息（间隔20px） -->
+                <g transform="translate(125, 0)">
+                    <!-- 歌曲标题 -->
+                    <text x="0" y="35" class="title">
+                        {% set max_title_length = 22 %}
+                        {% if media_info.title|length > max_title_length %}
+                            {{ media_info.title[:max_title_length] }}...
+                        {% else %}
+                            {{ media_info.title }}
+                        {% endif %}
+                    </text>
+                    
+                    <!-- 艺术家 -->
+                    <text x="0" y="60" class="artist">
+                        {% set max_artist_length = 25 %}
+                        {% if media_info.artist|length > max_artist_length %}
+                            {{ media_info.artist[:max_artist_length] }}...
+                        {% else %}
+                            {{ media_info.artist }}
+                        {% endif %}
+                    </text>
+                </g>
+                
+                <!-- 播放状态指示器 -->
+                {% if media_info.is_playing %}
+                    <circle cx="380" cy="105" r="5" class="status-playing" />
+                {% else %}
+                    <circle cx="380" cy="105" r="5" class="status-paused" />
+                {% endif %}
+                
+            {% else %}
+                <!-- 无媒体时的显示 -->
+                <!-- 左侧占位符 -->
+                <rect x="15" y="15" width="90" height="90" 
+                      rx="8" ry="8" class="album-placeholder"/>
+                <text x="60" y="60" class="music-icon">♪</text>
+                
+                <!-- 右侧文本 -->
+                <text x="200" y="65" class="no-media">暂无播放内容</text>
+            {% endif %}
+        </g>
+    </g>
+</svg>

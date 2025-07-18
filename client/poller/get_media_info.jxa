@@ -1,0 +1,64 @@
+// get_media_info.jxa
+// This script queries the private MediaRemote framework to get "now playing" information.
+// Output is a JSON string.
+
+ObjC.import('Foundation');
+
+function run() {
+    try {
+        // Try to load MediaRemote framework
+        const mediaRemoteBundle = $.NSBundle.bundleWithPath('/System/Library/PrivateFrameworks/MediaRemote.framework');
+        if (!mediaRemoteBundle || !mediaRemoteBundle.load()) {
+            return JSON.stringify({ error: "Could not load MediaRemote.framework" });
+        }
+
+        // Load MediaRemote library
+        const lib = $.dlopen('/System/Library/PrivateFrameworks/MediaRemote.framework/MediaRemote', $.RTLD_LAZY);
+        if (!lib) {
+            return JSON.stringify({ error: "Could not load MediaRemote library" });
+        }
+
+        // Get function pointer
+        const MRMediaRemoteGetNowPlayingInfo = $.dlsym(lib, 'MRMediaRemoteGetNowPlayingInfo');
+        if (!MRMediaRemoteGetNowPlayingInfo) {
+            return JSON.stringify({ error: "Could not find MRMediaRemoteGetNowPlayingInfo function" });
+        }
+
+        // Call the function with a synchronous approach
+        let result = null;
+        const callback = function(info) {
+            result = info;
+        };
+
+        // Call the function
+        MRMediaRemoteGetNowPlayingInfo(null, callback);
+
+        // Wait for callback
+        const startTime = Date.now();
+        while (result === null && (Date.now() - startTime) < 1000) {
+            $.NSRunLoop.currentRunLoop.runUntilDate($.NSDate.dateWithTimeIntervalSinceNow(0.01));
+        }
+
+        if (!result) {
+            return JSON.stringify(null);
+        }
+
+        // Extract information from the result
+        const title = result.objectForKey('kMRMediaRemoteNowPlayingInfoTitle');
+        const artist = result.objectForKey('kMRMediaRemoteNowPlayingInfoArtist');
+        const album = result.objectForKey('kMRMediaRemoteNowPlayingInfoAlbum');
+        const playbackRate = result.objectForKey('kMRMediaRemoteNowPlayingInfoPlaybackRate');
+
+        const mediaInfo = {
+            title: title ? title.UTF8String : null,
+            artist: artist ? artist.UTF8String : null,
+            album: album ? album.UTF8String : null,
+            isPlaying: playbackRate ? (playbackRate.doubleValue === 1.0) : false,
+        };
+
+        return JSON.stringify(mediaInfo);
+
+    } catch (error) {
+        return JSON.stringify({ error: error.toString() });
+    }
+}

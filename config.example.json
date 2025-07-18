@@ -1,0 +1,17 @@
+{
+  "server": {
+    "public_mode": false,
+    "api_key": "dev-secret-key-12345",
+    "poll_interval": 5,
+    "log_level": "INFO",
+    "port": 8000,
+    "template_dir": "",
+    "enable_album_art": true
+  },
+  "client": {
+    "server_url": "http://localhost:8000",
+    "api_key": "dev-secret-key-12345",
+    "poll_interval": 10,
+    "template": "default"
+  }
+}

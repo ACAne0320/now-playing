@@ -1,0 +1,36 @@
+/* 
+ * User custom CSS example
+ * Place your custom styles here to override the default template styles
+ */
+
+/* Example: Custom color scheme */
+.background { 
+    fill: #0d1117; 
+}
+
+.title { 
+    fill: #f0f6fc; 
+    font-weight: 700; 
+}
+
+.artist { 
+    fill: #7d8590; 
+}
+
+.album { 
+    fill: #6e7681; 
+}
+
+.status-playing { 
+    fill: #238636; 
+}
+
+/* Example: Custom font */
+.container { 
+    font-family: 'JetBrains Mono', monospace; 
+}
+
+/* Example: Add glow effect to playing status */
+.status-playing { 
+    filter: drop-shadow(0 0 3px #238636); 
+}

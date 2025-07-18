@@ -1,0 +1,167 @@
+<svg width="400" height="120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- Background gradient -->
+        <linearGradient id="darkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+        </linearGradient>
+        
+        <!-- Playing indicator gradient -->
+        <linearGradient id="playingGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#06ffa5;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
+        </linearGradient>
+        
+        <!-- Glow effect -->
+        <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        
+        <!-- Album art mask -->
+        <clipPath id="roundedMask">
+            <rect x="20" y="20" width="80" height="80" rx="8" ry="8"/>
+        </clipPath>
+    </defs>
+    
+    <style>
+        .container { 
+            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace; 
+        }
+        .background { 
+            fill: url(#darkGradient); 
+        }
+        .border { 
+            fill: none; 
+            stroke: #334155; 
+            stroke-width: 1;
+        }
+        .title { 
+            font-size: 16px; 
+            font-weight: 600; 
+            fill: #f1f5f9; 
+        }
+        .artist { 
+            font-size: 13px; 
+            font-weight: 400;
+            fill: #cbd5e1; 
+        }
+        .album { 
+            font-size: 11px; 
+            font-weight: 300;
+            fill: #94a3b8; 
+        }
+        .accent-bar { 
+            fill: url(#playingGradient); 
+            filter: url(#glow);
+        }
+        .status-indicator { 
+            font-size: 12px; 
+            font-weight: 500;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+        }
+        .status-playing { 
+            fill: #06ffa5; 
+        }
+        .status-paused { 
+            fill: #fbbf24; 
+        }
+        .no-media { 
+            font-size: 16px; 
+            font-weight: 400;
+            fill: #64748b; 
+            text-anchor: middle; 
+        }
+        .placeholder-bg {
+            fill: #1e293b;
+            stroke: #334155;
+            stroke-width: 1;
+        }
+        .code-brackets {
+            fill: #06ffa5;
+            font-weight: 700;
+        }
+        .waveform {
+            fill: none;
+            stroke: url(#playingGradient);
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+        
+        /* User custom CSS will be injected here */
+        {{ custom_css | safe }}
+    </style>
+    
+    <!-- Background -->
+    <rect width="400" height="120" class="background" />
+    <!-- Border -->
+    <rect width="400" height="120" class="border" />
+    
+    <g class="container">
+        {% if media_info and media_info.title %}
+            {% if media_info.album_art_b64 %}
+                <!-- Album art -->
+                <image href="data:image/png;base64,{{ media_info.album_art_b64 }}" 
+                       x="20" y="20" height="80" width="80" 
+                       clip-path="url(#roundedMask)" />
+            {% else %}
+                <!-- Placeholder -->
+                <rect x="20" y="20" width="80" height="80" rx="8" ry="8" 
+                      class="placeholder-bg" />
+                <text x="60" y="55" class="code-brackets" text-anchor="middle">♪</text>
+                <text x="60" y="70" style="font-size: 10px; fill: #64748b; text-anchor: middle;">AUDIO</text>
+            {% endif %}
+            
+            <!-- Code-style brackets -->
+            <text x="115" y="35" class="code-brackets">[</text>
+            <text x="385" y="35" class="code-brackets">]</text>
+            
+            <!-- Text content -->
+            <text x="125" y="35" class="title">
+                {% set max_title_length = 22 %}
+                {% if media_info.title|length > max_title_length %}
+                    {{ media_info.title[:max_title_length] }}...
+                {% else %}
+                    {{ media_info.title }}
+                {% endif %}
+            </text>
+            <text x="125" y="52" class="artist">
+                {% set max_artist_length = 28 %}
+                {% if media_info.artist|length > max_artist_length %}
+                    {{ media_info.artist[:max_artist_length] }}...
+                {% else %}
+                    {{ media_info.artist }}
+                {% endif %}
+            </text>
+            {% if media_info.album %}
+            <text x="125" y="68" class="album">
+                {% set max_album_length = 30 %}
+                {% if media_info.album|length > max_album_length %}
+                    {{ media_info.album[:max_album_length] }}...
+                {% else %}
+                    {{ media_info.album }}
+                {% endif %}
+            </text>
+            {% endif %}
+            
+            <!-- Status and accent bar -->
+            {% if media_info.is_playing %}
+                <rect x="20" y="105" width="360" height="3" class="accent-bar" />
+                <text x="380" y="98" class="status-indicator status-playing" text-anchor="end">▶ PLAYING</text>
+                <!-- Animated waveform -->
+                <path d="M125 85 L130 82 L135 88 L140 80 L145 85 L150 83 L155 87 L160 81" 
+                      class="waveform" />
+            {% else %}
+                <rect x="20" y="105" width="360" height="3" fill="#334155" />
+                <text x="380" y="98" class="status-indicator status-paused" text-anchor="end">⏸ PAUSED</text>
+            {% endif %}
+        {% else %}
+            <!-- No media playing -->
+            <text x="200" y="55" class="no-media">{ no_media_playing }</text>
+            <text x="200" y="75" style="font-size: 12px; fill: #475569; text-anchor: middle;">// waiting for audio input</text>
+        {% endif %}
+    </g>
+</svg>

@@ -1,0 +1,67 @@
+<svg width="300" height="80" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <style>
+        .container { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+        }
+        .background { 
+            fill: #ffffff; 
+            stroke: #e1e1e1; 
+            stroke-width: 1; 
+        }
+        .title { 
+            font-size: 14px; 
+            font-weight: 500; 
+            fill: #333333; 
+        }
+        .artist { 
+            font-size: 12px; 
+            fill: #666666; 
+        }
+        .status-dot-playing { 
+            fill: #1ed760; 
+        }
+        .status-dot-paused { 
+            fill: #888888; 
+        }
+        .no-media { 
+            font-size: 12px; 
+            fill: #999999; 
+            text-anchor: middle; 
+        }
+        
+        /* User custom CSS will be injected here */
+        {{ custom_css | safe }}
+    </style>
+    
+    <!-- Background -->
+    <rect width="300" height="80" class="background" rx="8" />
+    
+    <g class="container">
+        {% if media_info and media_info.title %}
+            <text x="15" y="30" class="title">
+                {% set max_title_length = 35 %}
+                {% if media_info.title|length > max_title_length %}
+                    {{ media_info.title[:max_title_length] }}...
+                {% else %}
+                    {{ media_info.title }}
+                {% endif %}
+            </text>
+            <text x="15" y="50" class="artist">
+                {% set max_artist_length = 40 %}
+                {% if media_info.artist|length > max_artist_length %}
+                    {{ media_info.artist[:max_artist_length] }}...
+                {% else %}
+                    {{ media_info.artist }}
+                {% endif %}
+            </text>
+
+            {% if media_info.is_playing %}
+                <circle cx="280" cy="65" r="3" class="status-playing" />
+            {% else %}
+                <circle cx="280" cy="65" r="3" class="status-paused" />
+            {% endif %}
+        {% else %}
+            <text x="150" y="45" class="no-media">No music playing</text>
+        {% endif %}
+    </g>
+</svg>

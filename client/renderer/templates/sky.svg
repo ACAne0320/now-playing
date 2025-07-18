@@ -1,0 +1,142 @@
+<svg width="400" height="120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- Subtle gradient for accent -->
+        <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+        </linearGradient>
+        
+        <!-- Album art mask -->
+        <clipPath id="circleClip">
+            <circle cx="60" cy="60" r="35"/>
+        </clipPath>
+    </defs>
+    
+    <style>
+        .container { 
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+        }
+        .background { 
+            fill: #fafafa; 
+        }
+        .border { 
+            fill: none; 
+            stroke: #e5e7eb; 
+            stroke-width: 1;
+        }
+        .title { 
+            font-size: 18px; 
+            font-weight: 600; 
+            fill: #111827; 
+        }
+        .artist { 
+            font-size: 14px; 
+            font-weight: 400;
+            fill: #6b7280; 
+        }
+        .album { 
+            font-size: 12px; 
+            font-weight: 300;
+            fill: #9ca3af; 
+        }
+        .accent-line { 
+            stroke: url(#accentGradient); 
+            stroke-width: 3;
+            stroke-linecap: round;
+        }
+        .status-text { 
+            font-size: 10px; 
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-playing { 
+            fill: #10b981; 
+        }
+        .status-paused { 
+            fill: #f59e0b; 
+        }
+        .no-media { 
+            font-size: 16px; 
+            font-weight: 400;
+            fill: #9ca3af; 
+            text-anchor: middle; 
+        }
+        .placeholder-circle {
+            fill: #f3f4f6;
+            stroke: #e5e7eb;
+            stroke-width: 2;
+        }
+        .music-note {
+            fill: #d1d5db;
+        }
+        
+        /* User custom CSS will be injected here */
+        {{ custom_css | safe }}
+    </style>
+    
+    <!-- Background -->
+    <rect width="400" height="120" class="background" />
+    <!-- Border -->
+    <rect width="400" height="120" class="border" />
+    
+    <g class="container">
+        {% if media_info and media_info.title %}
+            {% if media_info.album_art_b64 %}
+                <!-- Album art (circular) -->
+                <image href="data:image/png;base64,{{ media_info.album_art_b64 }}" 
+                       x="25" y="25" height="70" width="70" 
+                       clip-path="url(#circleClip)" />
+            {% else %}
+                <!-- Placeholder circle -->
+                <circle cx="60" cy="60" r="35" class="placeholder-circle" />
+                <path d="M50 45 L50 75 L55 70 L55 40 L75 35 L75 65 L80 60 L80 30 Z" 
+                      class="music-note" />
+            {% endif %}
+            
+            <!-- Accent line -->
+            <line x1="120" y1="30" x2="380" y2="30" class="accent-line" />
+            
+            <!-- Text content -->
+            <text x="120" y="50" class="title">
+                {% set max_title_length = 25 %}
+                {% if media_info.title|length > max_title_length %}
+                    {{ media_info.title[:max_title_length] }}...
+                {% else %}
+                    {{ media_info.title }}
+                {% endif %}
+            </text>
+            <text x="120" y="70" class="artist">
+                {% set max_artist_length = 35 %}
+                {% if media_info.artist|length > max_artist_length %}
+                    {{ media_info.artist[:max_artist_length] }}...
+                {% else %}
+                    {{ media_info.artist }}
+                {% endif %}
+            </text>
+            {% if media_info.album %}
+            <text x="120" y="85" class="album">
+                {% set max_album_length = 40 %}
+                {% if media_info.album|length > max_album_length %}
+                    {{ media_info.album[:max_album_length] }}...
+                {% else %}
+                    {{ media_info.album }}
+                {% endif %}
+            </text>
+            {% endif %}
+            
+            <!-- Status indicator -->
+            {% if media_info.is_playing %}
+                <text x="380" y="105" class="status-text status-playing" text-anchor="end">● PLAYING</text>
+            {% else %}
+                <text x="380" y="105" class="status-text status-paused" text-anchor="end">■ PAUSED</text>
+            {% endif %}
+        {% else %}
+            <!-- No media playing -->
+            <circle cx="200" cy="60" r="20" class="placeholder-circle" />
+            <path d="M190 50 L190 70 L195 65 L195 45 L210 40 L210 60 L215 55 L215 35 Z" 
+                  class="music-note" />
+            <text x="200" y="95" class="no-media">No music playing</text>
+        {% endif %}
+    </g>
+</svg>

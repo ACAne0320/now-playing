@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "client/main.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "client/main.py"
+    }
+  ],
+  "env": {
+    "PUBLIC_MODE": "true",
+    "API_KEY": "your-secure-api-key"
+  },
+  "functions": {
+    "client/main.py": {
+      "maxDuration": 10
+    }
+  }
+}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now Playing - Template Preview and Editor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1 data-i18n="headerTitle">🎵 Now Playing Template Editor</h1>
+                <p data-i18n="headerSubtitle">Real-time preview and customize your music status cards</p>
+            </div>
+            <div class="language-selector">
+                <div class="lang-toggle">
+                    <input type="radio" id="lang-en" name="language" value="en" checked>
+                    <label for="lang-en" class="lang-option">
+                        <span class="lang-flag">🇺🇸</span>
+                        <span class="lang-text">English</span>
+                    </label>
+                    
+                    <input type="radio" id="lang-zh" name="language" value="zh">
+                    <label for="lang-zh" class="lang-option">
+                        <span class="lang-flag">🇨🇳</span>
+                        <span class="lang-text">中文</span>
+                    </label>
+                    
+                    <div class="lang-slider"></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- 左侧控制面板 -->
+            <div class="control-panel">
+                <section class="template-selector">
+                    <h3 data-i18n="selectTemplate">Select Template</h3>
+                    <div class="form-group">
+                        <label for="templateSelect"><span data-i18n="currentTemplate">Current Template</span>: <span id="currentTemplate">default</span></label>
+                        <select id="templateSelect">
+                            <option value="" data-i18n="loadingTemplates">Loading templates...</option>
+                        </select>
+                    </div>
+                </section>
+
+                <section class="svg-editor">
+                    <h3 data-i18n="svgEditor">SVG Editor</h3>
+                    <textarea id="svgEditor" data-i18n-placeholder="editSvgPlaceholder" placeholder="Edit SVG code here..."></textarea>
+                    <div class="editor-actions">
+                        <button id="applyChanges" data-i18n="applyChanges">Apply Changes</button>
+                        <button id="resetTemplate" data-i18n="resetTemplate">Reset Template</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- 右侧预览面板 -->
+            <div class="preview-panel">
+                <div class="preview-header">
+                    <h3 data-i18n="livePreview">Live Preview</h3>
+                    <div class="preview-actions">
+                        <button id="refreshPreview" data-i18n="refreshPreview">Refresh Preview</button>
+                        <button id="exportSvg" data-i18n="exportSvg">Export SVG</button>
+                        <button id="saveTemplate" data-i18n="saveTemplate">Save Template</button>
+                    </div>
+                </div>
+                <div class="preview-container">
+                    <div class="preview-wrapper">
+                        <div id="svgPreview" class="svg-preview">
+                            <p data-i18n="loading">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部工具栏 -->
+        <footer class="toolbar">
+            <div class="status-bar">
+                <span id="statusText" data-i18n="ready">Ready</span>
+            </div>
+            <div class="toolbar-actions">
+                <button id="openApiDocs" data-i18n="apiDocs">API Documentation</button>
+                <button id="settingsBtn" data-i18n="settings">Settings</button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 设置模态框 -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-i18n="settings">Settings</h3>
+                <button class="close-btn" id="closeSettings">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="apiEndpoint" data-i18n="apiEndpoint">API Endpoint</label>
+                    <input type="text" id="apiEndpoint" value="http://localhost:8000" data-i18n-placeholder="apiEndpointPlaceholder" placeholder="Enter API endpoint URL">
+                </div>
+                <div class="form-group">
+                    <label for="refreshInterval" data-i18n="refreshInterval">Refresh Interval (seconds)</label>
+                    <input type="number" id="refreshInterval" value="5" min="1" max="60">
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="autoRefresh" checked>
+                        <span data-i18n="autoRefreshPreview">Auto refresh preview</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="showGrid">
+                        <span data-i18n="showGrid">Show grid</span>
+                    </label>
+                </div>
+                <div class="settings-actions">
+                    <button id="saveSettings" data-i18n="saveSettings">Save Settings</button>
+                    <button id="resetSettings" data-i18n="resetSettings">Reset Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
