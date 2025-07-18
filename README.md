@@ -41,7 +41,7 @@ A cross-platform music information service that displays currently playing media
 
 ### Sky 
 
-![Sky Template](https://now-playing-acane.vercel.app/now-playing.svg?template=music-card)
+![Sky Template](https://now-playing-acane.vercel.app/now-playing.svg?template=sky)
 
 ## 🚀 Quick Start
 
