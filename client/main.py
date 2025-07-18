@@ -48,20 +48,31 @@ async def lifespan(app: FastAPI):
         app_state.poller = create_poller()
 
     try:
+        print(f"Attempting to initialize Renderer in PUBLIC_MODE: {PUBLIC_MODE}")
         app_state.renderer = Renderer()
         print("Renderer initialized successfully")
     except Exception as e:
         print(f"Failed to initialize renderer: {e}")
+        print(f"Exception type: {type(e).__name__}")
+        import traceback
+        print(f"Traceback: {traceback.format_exc()}")
+        
         # Try with absolute path
         try:
             import os
             current_dir = os.path.dirname(os.path.abspath(__file__))
             template_dir = os.path.join(current_dir, "renderer", "templates")
+            print(f"Current directory: {current_dir}")
             print(f"Trying template directory: {template_dir}")
+            print(f"Template directory exists: {os.path.exists(template_dir)}")
+            if os.path.exists(template_dir):
+                print(f"Template directory contents: {os.listdir(template_dir)}")
             app_state.renderer = Renderer(template_dir=template_dir)
             print("Renderer initialized with absolute path")
         except Exception as e2:
             print(f"Failed to initialize renderer with absolute path: {e2}")
+            print(f"Exception type: {type(e2).__name__}")
+            print(f"Traceback: {traceback.format_exc()}")
             app_state.renderer = None
 
     yield

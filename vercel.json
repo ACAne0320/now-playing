@@ -14,9 +14,5 @@
   ],
   "env": {
     "PUBLIC_MODE": "true"
-  },
-  "includeFiles": [
-    "client/renderer/templates/**",
-    "client/**"
-  ]
+  }
 }
