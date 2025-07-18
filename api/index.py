@@ -20,9 +20,6 @@ try:
     # Import the FastAPI app
     from client.main import app
     
-    # Export the app for Vercel
-    handler = app
-    
 except Exception as e:
     print(f"Error importing app: {e}")
     import traceback
@@ -30,12 +27,12 @@ except Exception as e:
     
     # Create a minimal error app
     from fastapi import FastAPI
-    handler = FastAPI()
+    app = FastAPI()
     
-    @handler.get("/")
+    @app.get("/")
     async def error_root():
         return {"error": "Failed to import main app", "details": str(e)}
     
-    @handler.get("/health")
+    @app.get("/health")
     async def health():
         return {"status": "error", "message": "Main app failed to load"}
