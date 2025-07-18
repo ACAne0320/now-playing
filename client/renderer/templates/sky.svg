@@ -133,10 +133,7 @@
             {% endif %}
         {% else %}
             <!-- No media playing -->
-            <circle cx="200" cy="60" r="20" class="placeholder-circle" />
-            <path d="M190 50 L190 70 L195 65 L195 45 L210 40 L210 60 L215 55 L215 35 Z" 
-                  class="music-note" />
-            <text x="200" y="95" class="no-media">No music playing</text>
+            <text x="200" y="65" class="no-media">No music playing</text>
         {% endif %}
     </g>
 </svg>
