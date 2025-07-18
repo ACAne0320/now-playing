@@ -13,7 +13,6 @@
     }
   ],
   "env": {
-    "PUBLIC_MODE": "true",
-    "NOW_PLAYING_API_KEY": "@now_playing_api_key"
+    "PUBLIC_MODE": "true"
   }
 }
