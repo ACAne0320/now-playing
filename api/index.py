@@ -12,27 +12,9 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 # Set environment variables for Vercel deployment
-os.environ.setdefault("PUBLIC_MODE", "true")
-os.environ.setdefault("NOW_PLAYING_POLL_INTERVAL", "30")
-os.environ.setdefault("LOG_LEVEL", "INFO")
-
-# Ensure config.json exists or create a minimal one
-config_path = project_root / "config.json"
-if not config_path.exists():
-    import json
-    minimal_config = {
-        "server": {
-            "public_mode": True,
-            "api_key": os.environ.get("NOW_PLAYING_API_KEY", "default-key"),
-            "poll_interval": 30,
-            "log_level": "INFO",
-            "port": 8000,
-            "template_dir": "",
-            "enable_album_art": True
-        }
-    }
-    with open(config_path, 'w') as f:
-        json.dump(minimal_config, f, indent=2)
+os.environ['PUBLIC_MODE'] = "true"
+os.environ['NOW_PLAYING_POLL_INTERVAL'] = "30"
+os.environ['LOG_LEVEL'] = "INFO"
 
 try:
     # Import the FastAPI app
