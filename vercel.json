@@ -15,10 +15,5 @@
   "env": {
     "PUBLIC_MODE": "true",
     "NOW_PLAYING_API_KEY": "@now_playing_api_key"
-  },
-  "functions": {
-    "api/index.py": {
-      "maxDuration": 10
-    }
   }
 }
