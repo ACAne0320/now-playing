@@ -2,22 +2,22 @@
   "version": 2,
   "builds": [
     {
-      "src": "client/main.py",
+      "src": "api/index.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "client/main.py"
+      "dest": "api/index.py"
     }
   ],
   "env": {
     "PUBLIC_MODE": "true",
-    "API_KEY": "your-secure-api-key"
+    "NOW_PLAYING_API_KEY": "@now_playing_api_key"
   },
   "functions": {
-    "client/main.py": {
+    "api/index.py": {
       "maxDuration": 10
     }
   }
