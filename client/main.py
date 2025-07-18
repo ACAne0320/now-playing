@@ -47,7 +47,22 @@ async def lifespan(app: FastAPI):
     if not PUBLIC_MODE:
         app_state.poller = create_poller()
 
-    app_state.renderer = Renderer()
+    try:
+        app_state.renderer = Renderer()
+        print("Renderer initialized successfully")
+    except Exception as e:
+        print(f"Failed to initialize renderer: {e}")
+        # Try with absolute path
+        try:
+            import os
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            template_dir = os.path.join(current_dir, "renderer", "templates")
+            print(f"Trying template directory: {template_dir}")
+            app_state.renderer = Renderer(template_dir=template_dir)
+            print("Renderer initialized with absolute path")
+        except Exception as e2:
+            print(f"Failed to initialize renderer with absolute path: {e2}")
+            app_state.renderer = None
 
     yield
 
@@ -125,6 +140,20 @@ async def get_now_playing_svg(
             media_info = await poller.get_media_info()
         except Exception:
             media_info = None
+
+    if not renderer:
+        error_svg = """
+        <svg width="400" height="120" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="120" fill="#ff0000" opacity="0.1"/>
+            <text x="20" y="40" fill="#ff0000" font-family="Arial, sans-serif" font-size="14">
+                Renderer not initialized
+            </text>
+            <text x="20" y="60" fill="#666" font-family="Arial, sans-serif" font-size="12">
+                Template system failed to load
+            </text>
+        </svg>
+        """
+        return Response(content=error_svg, media_type="image/svg+xml")
 
     try:
         svg_content = renderer.render_svg(
