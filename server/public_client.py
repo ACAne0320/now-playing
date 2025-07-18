@@ -26,7 +26,7 @@ from config import get_config
 class PublicClient:
     """Client for sending media information to a public server."""
 
-    def __init__(self, server_url: str, api_key: str, poll_interval: int = 5):
+    def __init__(self, server_url: str, api_key: str, poll_interval: int = 5, exclude_browsers: bool = False):
         """
         Initialize the public client.
 
@@ -34,11 +34,12 @@ class PublicClient:
             server_url: URL of the public server
             api_key: API key for authentication
             poll_interval: Seconds between polling attempts
+            exclude_browsers: Whether to exclude browser media sources
         """
         self.server_url = server_url.rstrip("/")
         self.api_key = api_key
         self.poll_interval = poll_interval
-        self.poller = create_poller()
+        self.poller = create_poller(exclude_browsers=exclude_browsers)
 
         if not self.poller:
             raise RuntimeError("No supported media poller found for this platform")
@@ -159,7 +160,11 @@ def load_config() -> dict[str, Any]:
 def main():
     """Main entry point."""
     try:
-        config = load_config()
+        config_manager = get_config()
+        config = config_manager.get_client_config()
+        
+        # 从服务器配置获取 exclude_browsers 设置
+        exclude_browsers = config_manager.get("server.exclude_browsers", False)
 
         # Validate configuration
         if not config.get("server_url"):
@@ -175,8 +180,10 @@ def main():
             server_url=config["server_url"],
             api_key=config["api_key"],
             poll_interval=config["poll_interval"],
+            exclude_browsers=exclude_browsers,
         )
 
+        print(f"Browser filtering: {'Enabled' if exclude_browsers else 'Disabled'}")
         asyncio.run(client.run())
 
     except Exception as e:

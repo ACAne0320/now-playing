@@ -46,6 +46,8 @@ class Config:
             os.getenv("TEMPLATE_DIR", ""))
         config["server"].setdefault("enable_album_art", 
             os.getenv("ENABLE_ALBUM_ART", "true").lower() == "true")
+        config["server"].setdefault("exclude_browsers", 
+            os.getenv("EXCLUDE_BROWSERS", "false").lower() == "true")
         
         # Client configuration (for public deployment)
         config.setdefault("client", {})

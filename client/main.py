@@ -46,7 +46,8 @@ async def lifespan(app: FastAPI):
     app_state.start_time = time.time()
 
     if not PUBLIC_MODE:
-        app_state.poller = create_poller()
+        exclude_browsers = config.get("server.exclude_browsers", False)
+        app_state.poller = create_poller(exclude_browsers=exclude_browsers)
 
     try:
         debug_msg = f"Attempting to initialize Renderer in PUBLIC_MODE: {PUBLIC_MODE}"

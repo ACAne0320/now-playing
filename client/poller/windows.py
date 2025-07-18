@@ -29,10 +29,22 @@ class WindowsMediaPoller(BasePoller):
     Uses the modern Windows SDK Python bindings for better compatibility.
     """
 
-    def __init__(self, enable_album_art: bool = True):
+    def __init__(self, enable_album_art: bool = True, exclude_browsers: bool = False):
         self.is_windows = platform.system() == "Windows"
         self.winsdk_available = WINDOWS_AVAILABLE
         self.enable_album_art = enable_album_art
+        self.exclude_browsers = exclude_browsers
+        
+        # 浏览器进程名列表
+        self.browser_processes = {
+            "chrome.exe",
+            "msedge.exe", 
+            "firefox.exe",
+            "opera.exe",
+            "brave.exe",
+            "vivaldi.exe",
+            "iexplore.exe",
+        }
 
     def is_supported(self) -> bool:
         """Check if Windows winsdk polling is supported."""
@@ -51,6 +63,46 @@ class WindowsMediaPoller(BasePoller):
             current_session = sessions.get_current_session()
             if not current_session:
                 return None
+
+            # 如果启用了浏览器过滤，检查当前会话是否来自浏览器
+            if self.exclude_browsers:
+                try:
+                    # 尝试获取会话的源应用信息
+                    source_app_user_model_id = current_session.source_app_user_model_id
+                    
+                    # 检查是否是浏览器应用
+                    if source_app_user_model_id:
+                        source_lower = source_app_user_model_id.lower()
+                        for browser in self.browser_processes:
+                            browser_name = browser.replace('.exe', '')
+                            if browser_name in source_lower:
+                                print(f"Skipping browser session: {source_app_user_model_id}")
+                                return None
+                    
+                    # 如果无法获取源应用信息，检查媒体标题是否包含浏览器特征
+                    info = await current_session.try_get_media_properties_async()
+                    if info and info.title:
+                        title_lower = info.title.lower()
+                        # 检查是否包含浏览器或网站特征
+                        browser_indicators = [
+                            '_哔哩哔哩_bilibili',
+                            '- youtube',
+                            '| youtube',
+                            'chrome',
+                            'edge',
+                            'firefox',
+                            '网页',
+                            'browser'
+                        ]
+                        
+                        for indicator in browser_indicators:
+                            if indicator in title_lower:
+                                print(f"Skipping browser media: {info.title}")
+                                return None
+                
+                except Exception as e:
+                    print(f"Error checking browser filter: {e}")
+                    # 继续处理，不阻断正常功能
 
             info = await current_session.try_get_media_properties_async()
             if not info:

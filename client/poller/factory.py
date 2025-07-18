@@ -6,9 +6,12 @@ from .macos import MacosMediaPoller
 from .windows import WindowsMediaPoller
 
 
-def create_poller() -> Optional[BasePoller]:
+def create_poller(exclude_browsers: bool = False) -> Optional[BasePoller]:
     """
     Factory function to create the appropriate poller for the current platform.
+
+    Args:
+        exclude_browsers: Whether to exclude browser media sources (default: False)
 
     Returns:
         A platform-specific poller instance, or None if no poller is available.
@@ -16,7 +19,7 @@ def create_poller() -> Optional[BasePoller]:
     system = platform.system()
 
     if system == "Windows":
-        poller = WindowsMediaPoller()
+        poller = WindowsMediaPoller(exclude_browsers=exclude_browsers)
         if poller.is_supported():
             return poller
     elif system == "Darwin":  # macOS
