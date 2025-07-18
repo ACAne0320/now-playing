@@ -33,6 +33,7 @@ class AppState:
         self.renderer: Optional[Renderer] = None
         self.media_cache: dict[str, Any] = {}
         self.start_time: float = 0
+        self.debug_info: list[str] = []  # 添加调试信息存储
 
 
 app_state = AppState()
@@ -48,31 +49,68 @@ async def lifespan(app: FastAPI):
         app_state.poller = create_poller()
 
     try:
-        print(f"Attempting to initialize Renderer in PUBLIC_MODE: {PUBLIC_MODE}")
+        debug_msg = f"Attempting to initialize Renderer in PUBLIC_MODE: {PUBLIC_MODE}"
+        print(debug_msg)
+        app_state.debug_info.append(debug_msg)
+        
         app_state.renderer = Renderer()
-        print("Renderer initialized successfully")
+        success_msg = "Renderer initialized successfully"
+        print(success_msg)
+        app_state.debug_info.append(success_msg)
     except Exception as e:
-        print(f"Failed to initialize renderer: {e}")
-        print(f"Exception type: {type(e).__name__}")
+        error_msg = f"Failed to initialize renderer: {e}"
+        print(error_msg)
+        app_state.debug_info.append(error_msg)
+        
+        exc_type_msg = f"Exception type: {type(e).__name__}"
+        print(exc_type_msg)
+        app_state.debug_info.append(exc_type_msg)
+        
         import traceback
-        print(f"Traceback: {traceback.format_exc()}")
+        traceback_msg = f"Traceback: {traceback.format_exc()}"
+        print(traceback_msg)
+        app_state.debug_info.append(traceback_msg)
         
         # Try with absolute path
         try:
             import os
             current_dir = os.path.dirname(os.path.abspath(__file__))
             template_dir = os.path.join(current_dir, "renderer", "templates")
-            print(f"Current directory: {current_dir}")
-            print(f"Trying template directory: {template_dir}")
-            print(f"Template directory exists: {os.path.exists(template_dir)}")
+            
+            current_dir_msg = f"Current directory: {current_dir}"
+            print(current_dir_msg)
+            app_state.debug_info.append(current_dir_msg)
+            
+            template_dir_msg = f"Trying template directory: {template_dir}"
+            print(template_dir_msg)
+            app_state.debug_info.append(template_dir_msg)
+            
+            exists_msg = f"Template directory exists: {os.path.exists(template_dir)}"
+            print(exists_msg)
+            app_state.debug_info.append(exists_msg)
+            
             if os.path.exists(template_dir):
-                print(f"Template directory contents: {os.listdir(template_dir)}")
+                contents_msg = f"Template directory contents: {os.listdir(template_dir)}"
+                print(contents_msg)
+                app_state.debug_info.append(contents_msg)
+                
             app_state.renderer = Renderer(template_dir=template_dir)
-            print("Renderer initialized with absolute path")
+            success_abs_msg = "Renderer initialized with absolute path"
+            print(success_abs_msg)
+            app_state.debug_info.append(success_abs_msg)
         except Exception as e2:
-            print(f"Failed to initialize renderer with absolute path: {e2}")
-            print(f"Exception type: {type(e2).__name__}")
-            print(f"Traceback: {traceback.format_exc()}")
+            error_abs_msg = f"Failed to initialize renderer with absolute path: {e2}"
+            print(error_abs_msg)
+            app_state.debug_info.append(error_abs_msg)
+            
+            exc_type_abs_msg = f"Exception type: {type(e2).__name__}"
+            print(exc_type_abs_msg)
+            app_state.debug_info.append(exc_type_abs_msg)
+            
+            traceback_abs_msg = f"Traceback: {traceback.format_exc()}"
+            print(traceback_abs_msg)
+            app_state.debug_info.append(traceback_abs_msg)
+            
             app_state.renderer = None
 
     yield
@@ -258,6 +296,7 @@ async def health_check(
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "mode": "public" if PUBLIC_MODE else "local",
+        "debug_info": app_state.debug_info,  # 添加调试信息
         "components": {
             "poller": {
                 "available": poller is not None,
