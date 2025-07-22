@@ -2,14 +2,13 @@
 
 A cross-platform music information service that displays currently playing media as beautiful SVG cards. Perfect for OBS streaming overlays, GitHub profiles, and web integrations.
 
-[![CI/CD](https://github.com/ACAne0320/now-playing/actions/workflows/ci.yml/badge.svg)](https://github.com/ACAne0320/now-playing/actions/workflows/ci.yml)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
 ## ✨ Features
 
-- 🎨 **Beautiful SVG Cards**: Multiple customizable templates with album art
+- 🎨 **Beautiful SVG Cards**: Multiple customizable templates with high-quality album art
 - 🖥️ **Cross-Platform**: Native support for Windows and macOS media APIs
 - 🔄 **Real-time Updates**: Live media information with automatic refresh
 - 🎮 **OBS Integration**: Perfect for streaming overlays and screen recordings
@@ -23,14 +22,6 @@ A cross-platform music information service that displays currently playing media
 
 ![Default Template](https://now-playing-acane.vercel.app/now-playing.svg?template=default)
 
-### Minimalist
-
-![Minimalist Template](https://now-playing-acane.vercel.app/now-playing.svg?template=minimalist)
-
-### Neo
-
-![Neo Template](https://now-playing-acane.vercel.app/now-playing.svg?template=neo)
-
 ### Rounded
 
 ![Rounded Template](https://now-playing-acane.vercel.app/now-playing.svg?template=rounded)
@@ -39,7 +30,7 @@ A cross-platform music information service that displays currently playing media
 
 ![Music Card Template](https://now-playing-acane.vercel.app/now-playing.svg?template=music-card)
 
-### Sky 
+### Sky
 
 ![Sky Template](https://now-playing-acane.vercel.app/now-playing.svg?template=sky)
 
@@ -65,6 +56,7 @@ cp config.example.json config.json
 # Edit config.json as needed (optional)
 
 # Run the interactive launcher
+chmod +x start.sh
 ./start.sh
 ```
 
@@ -251,15 +243,10 @@ export NOW_PLAYING_TEMPLATE=modern-card
 Available templates:
 
 - `default`: Full-featured with album art and progress
-- `modern-card`: Beautiful gradient card with modern design
-- `minimalist-line`: Clean line-based design with circular album art
-- `modern-dark`: Dark theme with coding aesthetic
-- `glassmorphism`: Translucent glass effect with blur
-- `neo`: Neumorphism design with 3D shadows
-- `rounded`: Modern rounded design with clean layout
 - `minimalist`: Clean and simple design
-- `rounded-simple`: Simplified rounded template
+- `rounded`: Modern rounded design with clean layout
 - `music-card`: Spotify-like card with animated sound bars
+- etc..
 
 ```bash
 # Use specific template
@@ -284,8 +271,8 @@ http://localhost:8000/now-playing.svg?custom_css=.title{font-family:Arial,sans-s
 
 | Platform | API | Status | Features |
 |----------|-----|--------|----------|
-| Windows 10/11 | Windows SDK | ✅ Full | Media info, album art, playback status |
-| macOS 10.15+ | MediaRemote.framework | ✅ Full | Media info, album art, playback status |
+| Windows 10/11 | Windows Media Control API | ✅ Full | Media info, album art, playback status |
+| macOS 10.15+ | MediaRemote.framework + mediaremote-adapter | ✅ Full | Media info, album art, playback status |
 
 ## 📦 Deployment
 
@@ -355,6 +342,14 @@ uv sync --dev
 - Regularly rotate API keys
 - Monitor logs for unusual activity
 - Implement IP whitelisting if needed
+
+## � Acknowledgments
+
+Special thanks to the following open-source projects that make this service possible:
+
+- **[mediaremote-adapter](https://github.com/ungive/mediaremote-adapter)** by [@ungive](https://github.com/ungive) - Essential for accessing macOS MediaRemote framework on macOS 15.4+. This library provides the critical functionality needed to bypass Apple's MediaRemote restrictions and access complete media information including album artwork.
+- **FastAPI** - Modern, fast web framework for building APIs with Python 3.6+
+- **uv** - Ultra-fast Python package installer and resolver
 
 ## 📄 License
 

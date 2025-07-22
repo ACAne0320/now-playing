@@ -1,64 +1,110 @@
 // get_media_info.jxa
-// This script queries the private MediaRemote framework to get "now playing" information.
+// This script gets "now playing" information from macOS using MediaRemote framework.
+// Works on macOS 15.4+ using modern MRNowPlayingRequest API.
 // Output is a JSON string.
 
 ObjC.import('Foundation');
 
 function run() {
     try {
-        // Try to load MediaRemote framework
-        const mediaRemoteBundle = $.NSBundle.bundleWithPath('/System/Library/PrivateFrameworks/MediaRemote.framework');
-        if (!mediaRemoteBundle || !mediaRemoteBundle.load()) {
-            return JSON.stringify({ error: "Could not load MediaRemote.framework" });
+        // Try to get system-wide Now Playing info using MediaRemote framework
+        const mediaInfo = getSystemNowPlayingInfo();
+        if (mediaInfo) {
+            return JSON.stringify(mediaInfo);
         }
-
-        // Load MediaRemote library
-        const lib = $.dlopen('/System/Library/PrivateFrameworks/MediaRemote.framework/MediaRemote', $.RTLD_LAZY);
-        if (!lib) {
-            return JSON.stringify({ error: "Could not load MediaRemote library" });
-        }
-
-        // Get function pointer
-        const MRMediaRemoteGetNowPlayingInfo = $.dlsym(lib, 'MRMediaRemoteGetNowPlayingInfo');
-        if (!MRMediaRemoteGetNowPlayingInfo) {
-            return JSON.stringify({ error: "Could not find MRMediaRemoteGetNowPlayingInfo function" });
-        }
-
-        // Call the function with a synchronous approach
-        let result = null;
-        const callback = function(info) {
-            result = info;
-        };
-
-        // Call the function
-        MRMediaRemoteGetNowPlayingInfo(null, callback);
-
-        // Wait for callback
-        const startTime = Date.now();
-        while (result === null && (Date.now() - startTime) < 1000) {
-            $.NSRunLoop.currentRunLoop.runUntilDate($.NSDate.dateWithTimeIntervalSinceNow(0.01));
-        }
-
-        if (!result) {
-            return JSON.stringify(null);
-        }
-
-        // Extract information from the result
-        const title = result.objectForKey('kMRMediaRemoteNowPlayingInfoTitle');
-        const artist = result.objectForKey('kMRMediaRemoteNowPlayingInfoArtist');
-        const album = result.objectForKey('kMRMediaRemoteNowPlayingInfoAlbum');
-        const playbackRate = result.objectForKey('kMRMediaRemoteNowPlayingInfoPlaybackRate');
-
-        const mediaInfo = {
-            title: title ? title.UTF8String : null,
-            artist: artist ? artist.UTF8String : null,
-            album: album ? album.UTF8String : null,
-            isPlaying: playbackRate ? (playbackRate.doubleValue === 1.0) : false,
-        };
-
-        return JSON.stringify(mediaInfo);
-
+        
+        // No media info found
+        return JSON.stringify(null);
+        
     } catch (error) {
         return JSON.stringify({ error: error.toString() });
+    }
+}
+
+function getSystemNowPlayingInfo() {
+    try {
+        // Load MediaRemote framework using modern approach
+        const MediaRemote = $.NSBundle.bundleWithPath('/System/Library/PrivateFrameworks/MediaRemote.framework/');
+        if (!MediaRemote) {
+            console.log('MediaRemote framework not found');
+            return null;
+        }
+        
+        // Load the framework
+        MediaRemote.load;
+        
+        // Get the MRNowPlayingRequest class
+        const MRNowPlayingRequest = $.NSClassFromString('MRNowPlayingRequest');
+        if (!MRNowPlayingRequest) {
+            console.log('MRNowPlayingRequest class not found');
+            return null;
+        }
+        
+        // Get the local now playing player and info
+        const localPlayerPath = MRNowPlayingRequest.localNowPlayingPlayerPath;
+        if (!localPlayerPath) {
+            console.log('No local now playing player found');
+            return null;
+        }
+        
+        const client = localPlayerPath.client;
+        const appName = client ? client.displayName : null;
+        
+        const localNowPlayingItem = MRNowPlayingRequest.localNowPlayingItem;
+        if (!localNowPlayingItem) {
+            console.log('No now playing item found');
+            return null;
+        }
+        
+        const infoDict = localNowPlayingItem.nowPlayingInfo;
+        if (!infoDict) {
+            console.log('No now playing info dict found');
+            return null;
+        }
+        
+        // Extract track information
+        const title = infoDict.valueForKey('kMRMediaRemoteNowPlayingInfoTitle');
+        const album = infoDict.valueForKey('kMRMediaRemoteNowPlayingInfoAlbum');
+        const artist = infoDict.valueForKey('kMRMediaRemoteNowPlayingInfoArtist');
+        const playbackRate = infoDict.valueForKey('kMRMediaRemoteNowPlayingInfoPlaybackRate');
+        
+        // Convert to JavaScript strings and create result
+        const titleStr = title ? title.js : "Unknown Title";
+        const albumStr = album ? album.js : "Unknown Album";
+        const artistStr = artist ? artist.js : "Unknown Artist";
+        const appNameStr = appName ? appName.js : "Unknown App";
+        const isPlaying = playbackRate ? (parseFloat(playbackRate.js) > 0) : false;
+        
+        // Try to get artwork metadata (for fallback compatibility)
+        let artworkInfo = null;
+        try {
+            const artworkMIMEType = infoDict.valueForKey('kMRMediaRemoteNowPlayingInfoArtworkMIMEType');
+            const artworkIdentifier = infoDict.valueForKey('kMRMediaRemoteNowPlayingInfoArtworkIdentifier');
+            const artworkWidth = infoDict.valueForKey('kMRMediaRemoteNowPlayingInfoArtworkDataWidth');
+            const artworkHeight = infoDict.valueForKey('kMRMediaRemoteNowPlayingInfoArtworkDataHeight');
+            
+            if (artworkIdentifier || (artworkWidth && artworkHeight)) {
+                artworkInfo = {
+                    identifier: artworkIdentifier ? artworkIdentifier.js : null,
+                    width: artworkWidth ? parseInt(artworkWidth.js) : null,
+                    height: artworkHeight ? parseInt(artworkHeight.js) : null,
+                    mimeType: artworkMIMEType ? artworkMIMEType.js : null
+                };
+            }
+        } catch (e) {
+            // Artwork info not available
+        }
+        
+        return {
+            title: titleStr,
+            artist: artistStr,
+            album: albumStr,
+            isPlaying: isPlaying,
+            albumArt: artworkInfo
+        };
+        
+    } catch (e) {
+        console.log('System Now Playing detection error:', e.toString());
+        return null;
     }
 }
