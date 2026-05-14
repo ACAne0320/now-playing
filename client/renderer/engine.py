@@ -24,7 +24,7 @@ class Renderer:
         # Create Jinja2 environment
         self.env = Environment(
             loader=FileSystemLoader(str(self.template_dir)),
-            autoescape=select_autoescape(["html", "xml"]),
+            autoescape=select_autoescape(["html", "xml", "svg"]),
         )
 
     def render_svg(

@@ -63,6 +63,7 @@
                         {{ media_info.artist }}
                     {% endif %}                
                 </text>
+                {% if media_info.album %}
                 <text x="125" y="75" class="album">
                     {% set max_album_length = 30 %}
                     {% if media_info.album|length > max_album_length %}
@@ -71,6 +72,7 @@
                         {{ media_info.album }}
                     {% endif %}
                 </text>
+                {% endif %}
                 
                 <!-- Status indicator -->
                 {% if media_info.is_playing %}
@@ -82,7 +84,9 @@
                 <!-- Text without album art -->
                 <text x="20" y="40" class="title">{{ media_info.title }}</text>
                 <text x="20" y="60" class="artist">{{ media_info.artist }}</text>
+                {% if media_info.album %}
                 <text x="20" y="80" class="album">{{ media_info.album }}</text>
+                {% endif %}
                 
                 <!-- Status indicator -->
                 {% if media_info.is_playing %}
