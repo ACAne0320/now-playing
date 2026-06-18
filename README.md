@@ -1,4 +1,4 @@
-# 🎵 Now Playing Service
+# Now Playing
 
 A cross-platform music information service that displays currently playing media as beautiful SVG cards. Perfect for OBS streaming overlays, GitHub profiles, and web integrations.
 
@@ -6,17 +6,17 @@ A cross-platform music information service that displays currently playing media
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
-## ✨ Features
+## Features
 
-- 🎨 **Beautiful SVG Cards**: Multiple customizable templates with high-quality album art
-- 🖥️ **Cross-Platform**: Native support for Windows and macOS media APIs
-- 🔄 **Real-time Updates**: Live media information with automatic refresh
-- 🎮 **OBS Integration**: Perfect for streaming overlays and screen recordings
-- 🌐 **GitHub Integration**: Display your music taste on your profile
-- 🚀 **Modern Stack**: Built with FastAPI, uv, and platform-specific APIs
-- 📱 **Responsive Design**: Adapts to different screen sizes and contexts
+- **Beautiful SVG Cards**: Multiple customizable templates with high-quality album art
+- **Cross-Platform**: Native support for Windows and macOS media APIs
+- **Real-time Updates**: Live media information with automatic refresh
+- **OBS Integration**: Perfect for streaming overlays and screen recordings
+- **GitHub Integration**: Display your music taste on your profile
+- **Modern Stack**: Built with FastAPI, uv, and platform-specific APIs
+- **Responsive Design**: Adapts to different screen sizes and contexts
 
-## 🖼️ Template Gallery
+## Template Gallery
 
 ### Default
 
@@ -34,7 +34,7 @@ A cross-platform music information service that displays currently playing media
 
 ![Sky Template](https://now-playing-acane.vercel.app/now-playing.svg?template=sky)
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -86,7 +86,7 @@ uv run python -m client.main
 
 ## 🎯 Usage Modes
 
-### 1. 🖥️ Local Mode (OBS Integration)
+### 1. Local Mode (OBS Integration)
 
 Perfect for streaming and local applications:
 
@@ -117,7 +117,7 @@ uv run python -m client.main
 3. Set dimensions to 400x120 (or customize)
 4. Enable "Refresh browser when scene becomes active"
 
-### 2. 🌐 Public Mode (GitHub Integration)
+### 2. Public Mode (GitHub Integration)
 
 Deploy to cloud for GitHub README integration:
 
@@ -145,7 +145,7 @@ uv run python -m client.main
 ![Now Playing](https://yours-now-playing-server/now-playing.svg)
 ```
 
-### 3. 📤 Client Mode (Remote Data Push)
+### 3. Client Mode (Remote Data Push)
 
 Send local media data to remote server:
 
@@ -173,7 +173,7 @@ Send local media data to remote server:
 uv run python server/public_client.py
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 ### Configuration Files
 
@@ -236,7 +236,7 @@ export NOW_PLAYING_CLIENT_POLL_INTERVAL=15
 export NOW_PLAYING_TEMPLATE=modern-card
 ```
 
-## 🎨 Customization
+## Customization
 
 ### Templates
 
@@ -265,7 +265,7 @@ http://localhost:8000/now-playing.svg?custom_css=.title{fill:red;}.artist{fill:b
 http://localhost:8000/now-playing.svg?custom_css=.title{font-family:Arial,sans-serif;}
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### Platform Support
 
@@ -274,7 +274,7 @@ http://localhost:8000/now-playing.svg?custom_css=.title{font-family:Arial,sans-s
 | Windows 10/11 | Windows Media Control API | ✅ Full | Media info, album art, playback status |
 | macOS 10.15+ | MediaRemote.framework + mediaremote-adapter | ✅ Full | Media info, album art, playback status |
 
-## 📦 Deployment
+## Deployment
 
 ### Docker
 
@@ -297,7 +297,7 @@ docker run -d -p 8000:8000 \
 # coming soon
 ```
 
-## 🧪 Development
+## Development
 
 ### Setup Development Environment
 
@@ -325,8 +325,9 @@ uv sync --dev
     <text>No media playing</text>
   {% endif %}
 </svg>
+```
 
-## 🔒 Security
+## Security
 
 ### API Security
 
@@ -343,7 +344,7 @@ uv sync --dev
 - Monitor logs for unusual activity
 - Implement IP whitelisting if needed
 
-## � Acknowledgments
+## Acknowledgments
 
 Special thanks to the following open-source projects that make this service possible:
 
