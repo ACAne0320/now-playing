@@ -11,6 +11,12 @@
         <clipPath id="skyCircle">
             <circle cx="62" cy="60" r="38"/>
         </clipPath>
+        <linearGradient id="skyFade">
+            <stop offset="0.85" stop-color="#ffffff"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <mask id="skyWide"><rect x="124" y="4" width="198" height="84" fill="url(#skyFade)"/></mask>
+        <mask id="skyNarrow"><rect x="124" y="80" width="156" height="36" fill="url(#skyFade)"/></mask>
         <filter id="skyShadow" x="-40%" y="-40%" width="180%" height="180%">
             <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1f2937" flood-opacity="0.18"/>
         </filter>
@@ -47,10 +53,14 @@
             {% endif %}
 
             <!-- Text -->
-            <text x="124" y="{{ 50 if has_album else 56 }}" class="title">{{ (media_info.title)|truncate(24, true, '…', 0) }}</text>
-            <text x="124" y="{{ 72 if has_album else 80 }}" class="artist">{{ (media_info.artist or '')|truncate(30, true, '…', 0) }}</text>
+            <g mask="url(#skyWide)">
+                <text x="124" y="{{ 50 if has_album else 56 }}" class="title">{{ (media_info.title)|truncate(48, true, '', 0) }}</text>
+                <text x="124" y="{{ 72 if has_album else 80 }}" class="artist">{{ (media_info.artist or '')|truncate(52, true, '', 0) }}</text>
+            </g>
             {% if has_album %}
-            <text x="124" y="92" class="album">{{ (media_info.album)|truncate(34, true, '…', 0) }}</text>
+            <g mask="url(#skyNarrow)">
+                <text x="124" y="92" class="album">{{ (media_info.album)|truncate(56, true, '', 0) }}</text>
+            </g>
             {% endif %}
 
             <!-- Status -->

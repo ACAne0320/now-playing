@@ -14,6 +14,11 @@
         <filter id="plSoft" x="-50%" y="-50%" width="200%" height="200%">
             <feDropShadow dx="3" dy="3" stdDeviation="4" flood-color="#b8c0cf" flood-opacity="0.8"/>
         </filter>
+        <linearGradient id="plFade">
+            <stop offset="0.85" stop-color="#ffffff"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <mask id="plText"><rect x="112" y="28" width="200" height="68" fill="url(#plFade)"/></mask>
     </defs>
 
     <style>
@@ -40,11 +45,13 @@
                 <text x="60" y="68" text-anchor="middle" font-size="24" fill="#94a3b8">♪</text>
             {% endif %}
 
-            <text x="112" y="{{ 50 if has_album else 56 }}" class="title">{{ (media_info.title)|truncate(20, true, '…', 0) }}</text>
-            <text x="112" y="{{ 70 if has_album else 78 }}" class="artist">{{ (media_info.artist or '')|truncate(26, true, '…', 0) }}</text>
-            {% if has_album %}
-            <text x="112" y="88" class="album">{{ (media_info.album)|truncate(30, true, '…', 0) }}</text>
-            {% endif %}
+            <g mask="url(#plText)">
+                <text x="112" y="{{ 50 if has_album else 56 }}" class="title">{{ (media_info.title)|truncate(44, true, '', 0) }}</text>
+                <text x="112" y="{{ 70 if has_album else 78 }}" class="artist">{{ (media_info.artist or '')|truncate(48, true, '', 0) }}</text>
+                {% if has_album %}
+                <text x="112" y="88" class="album">{{ (media_info.album)|truncate(52, true, '', 0) }}</text>
+                {% endif %}
+            </g>
 
             <!-- Status button -->
             {% if media_info.is_playing %}

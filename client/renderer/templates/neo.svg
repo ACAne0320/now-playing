@@ -15,6 +15,12 @@
             <feGaussianBlur stdDeviation="2.2" result="b"/>
             <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
+        <linearGradient id="neoFade">
+            <stop offset="0.86" stop-color="#ffffff"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <mask id="neoTitle"><rect x="130" y="4" width="236" height="56" fill="url(#neoFade)"/></mask>
+        <mask id="neoBody"><rect x="120" y="56" width="262" height="42" fill="url(#neoFade)"/></mask>
     </defs>
 
     <style>
@@ -49,13 +55,17 @@
 
             <!-- Title with code brackets -->
             <text x="118" y="{{ 44 if has_album else 52 }}" class="bracket">[</text>
-            <text x="130" y="{{ 44 if has_album else 52 }}" class="title">{{ (media_info.title)|truncate(24, true, '…', 0) }}</text>
+            <g mask="url(#neoTitle)">
+                <text x="130" y="{{ 44 if has_album else 52 }}" class="title">{{ (media_info.title)|truncate(40, true, '', 0) }}</text>
+            </g>
             <text x="382" y="{{ 44 if has_album else 52 }}" class="bracket" text-anchor="end">]</text>
 
-            <text x="120" y="{{ 64 if has_album else 74 }}" class="artist">{{ (media_info.artist or '')|truncate(30, true, '…', 0) }}</text>
-            {% if has_album %}
-            <text x="120" y="82" class="album">{{ (media_info.album)|truncate(34, true, '…', 0) }}</text>
-            {% endif %}
+            <g mask="url(#neoBody)">
+                <text x="120" y="{{ 64 if has_album else 74 }}" class="artist">{{ (media_info.artist or '')|truncate(46, true, '', 0) }}</text>
+                {% if has_album %}
+                <text x="120" y="82" class="album">{{ (media_info.album)|truncate(50, true, '', 0) }}</text>
+                {% endif %}
+            </g>
 
             {% if media_info.is_playing %}
                 <g transform="translate(120, 100)" fill="url(#neoAccent)" filter="url(#neoGlow)">

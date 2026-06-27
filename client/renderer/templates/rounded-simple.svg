@@ -6,6 +6,11 @@
         <filter id="simpShadow" x="-40%" y="-40%" width="180%" height="180%">
             <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000000" flood-opacity="0.45"/>
         </filter>
+        <linearGradient id="simpFade">
+            <stop offset="0.86" stop-color="#ffffff"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <mask id="simpText"><rect x="124" y="30" width="216" height="60" fill="url(#simpFade)"/></mask>
     </defs>
 
     <style>
@@ -30,8 +35,10 @@
                 <path d="M58 46 v28 a8 8 0 1 1 -5 -7 V53 l20 -5 v19 a8 8 0 1 1 -5 -7 V42 Z" fill="#555555"/>
             {% endif %}
 
-            <text x="124" y="57" class="title">{{ (media_info.title)|truncate(20, true, '…', 0) }}</text>
-            <text x="124" y="80" class="artist">{{ (media_info.artist or '')|truncate(24, true, '…', 0) }}</text>
+            <g mask="url(#simpText)">
+                <text x="124" y="57" class="title">{{ (media_info.title)|truncate(44, true, '', 0) }}</text>
+                <text x="124" y="80" class="artist">{{ (media_info.artist or '')|truncate(48, true, '', 0) }}</text>
+            </g>
 
             {% if media_info.is_playing %}
                 <g transform="translate(348, 70)" fill="#1ed760">

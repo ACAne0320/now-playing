@@ -7,6 +7,12 @@
         <clipPath id="defArt">
             <rect x="16" y="16" width="88" height="88" rx="10"/>
         </clipPath>
+        <linearGradient id="defFade">
+            <stop offset="0.85" stop-color="#ffffff"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <mask id="defWide"><rect x="124" y="4" width="198" height="82" fill="url(#defFade)"/></mask>
+        <mask id="defNarrow"><rect x="124" y="78" width="156" height="38" fill="url(#defFade)"/></mask>
         <filter id="defShadow" x="-40%" y="-40%" width="180%" height="180%">
             <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000000" flood-opacity="0.45"/>
         </filter>
@@ -39,10 +45,14 @@
                 <path d="M58 42 v30 a9 9 0 1 1 -5 -8 V50 l22 -5 v20 a9 9 0 1 1 -5 -8 V38 Z" fill="#5a5a5a"/>
             {% endif %}
 
-            <text x="124" y="{{ 47 if has_album else 55 }}" class="title">{{ (media_info.title)|truncate(22, true, '…', 0) }}</text>
-            <text x="124" y="{{ 69 if has_album else 79 }}" class="artist">{{ (media_info.artist or '')|truncate(28, true, '…', 0) }}</text>
+            <g mask="url(#defWide)">
+                <text x="124" y="{{ 47 if has_album else 55 }}" class="title">{{ (media_info.title)|truncate(48, true, '', 0) }}</text>
+                <text x="124" y="{{ 69 if has_album else 79 }}" class="artist">{{ (media_info.artist or '')|truncate(52, true, '', 0) }}</text>
+            </g>
             {% if has_album %}
-            <text x="124" y="90" class="album">{{ (media_info.album)|truncate(32, true, '…', 0) }}</text>
+            <g mask="url(#defNarrow)">
+                <text x="124" y="90" class="album">{{ (media_info.album)|truncate(56, true, '', 0) }}</text>
+            </g>
             {% endif %}
 
             {% if media_info.is_playing %}
