@@ -18,21 +18,57 @@ A cross-platform music information service that displays currently playing media
 
 ## Template Gallery
 
-### Default
+Pick a style by adding `?template=<name>` to the card URL. A few favorites are shown below — expand the section underneath for the rest.
 
-![Default Template](https://now-playing-acane.vercel.app/now-playing.svg?template=default)
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=sky" alt="sky template" width="400"><br>
+      <sub><code>sky</code></sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=default" alt="default template" width="400"><br>
+      <sub><code>default</code></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=neo" alt="neo template" width="400"><br>
+      <sub><code>neo</code></sub>
+    </td>
+    <td align="center">
+      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=music-card" alt="music-card template" height="240"><br>
+      <sub><code>music-card</code></sub>
+    </td>
+  </tr>
+</table>
 
-### Rounded
-
-![Rounded Template](https://now-playing-acane.vercel.app/now-playing.svg?template=rounded)
-
-### Music Card
-
-![Music Card Template](https://now-playing-acane.vercel.app/now-playing.svg?template=music-card)
-
-### Sky
-
-![Sky Template](https://now-playing-acane.vercel.app/now-playing.svg?template=sky)
+<details>
+  <summary><b>Show the other 4 templates »</b></summary>
+  <br>
+  <table>
+    <tr>
+      <td align="center" width="50%">
+        <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=rounded" alt="rounded template" width="400"><br>
+        <sub><code>rounded</code></sub>
+      </td>
+      <td align="center" width="50%">
+        <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=player" alt="player template" width="400"><br>
+        <sub><code>player</code></sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=rounded-simple" alt="rounded-simple template" width="400"><br>
+        <sub><code>rounded-simple</code></sub>
+      </td>
+      <td align="center">
+        <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=minimalist" alt="minimalist template" width="300"><br>
+        <sub><code>minimalist</code></sub>
+      </td>
+    </tr>
+  </table>
+</details>
 
 ## Quick Start
 

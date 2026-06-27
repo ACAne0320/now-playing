@@ -1,139 +1,78 @@
-<svg width="400" height="120" xmlns="http://www.w3.org/2000/svg">
+<svg width="400" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Now playing">
     <defs>
-        <!-- Subtle gradient for accent -->
-        <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+        <linearGradient id="skyBg" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#f5f7fa"/>
         </linearGradient>
-        
-        <!-- Album art mask -->
-        <clipPath id="circleClip">
-            <circle cx="60" cy="60" r="35"/>
+        <linearGradient id="skyAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6366f1"/>
+            <stop offset="100%" stop-color="#8b5cf6"/>
+        </linearGradient>
+        <clipPath id="skyCircle">
+            <circle cx="62" cy="60" r="38"/>
         </clipPath>
+        <filter id="skyShadow" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1f2937" flood-opacity="0.18"/>
+        </filter>
     </defs>
-    
+
     <style>
-        .container { 
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-        }
-        .background { 
-            fill: #fafafa; 
-        }
-        .border { 
-            fill: none; 
-            stroke: #e5e7eb; 
-            stroke-width: 1;
-        }
-        .title { 
-            font-size: 18px; 
-            font-weight: 600; 
-            fill: #111827; 
-        }
-        .artist { 
-            font-size: 14px; 
-            font-weight: 400;
-            fill: #6b7280; 
-        }
-        .album { 
-            font-size: 12px; 
-            font-weight: 300;
-            fill: #9ca3af; 
-        }
-        .accent-line { 
-            stroke: url(#accentGradient); 
-            stroke-width: 3;
-            stroke-linecap: round;
-        }
-        .status-text { 
-            font-size: 10px; 
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .status-playing { 
-            fill: #10b981; 
-        }
-        .status-paused { 
-            fill: #f59e0b; 
-        }
-        .no-media { 
-            font-size: 16px; 
-            font-weight: 400;
-            fill: #9ca3af; 
-            text-anchor: middle; 
-        }
-        .placeholder-circle {
-            fill: #f3f4f6;
-            stroke: #e5e7eb;
-            stroke-width: 2;
-        }
-        .music-note {
-            fill: #d1d5db;
-        }
-        
-        /* User custom CSS will be injected here */
+        .container { font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .title  { font-size: 19px; font-weight: 700; fill: #111827; letter-spacing: -0.2px; }
+        .artist { font-size: 14px; font-weight: 500; fill: #6b7280; }
+        .album  { font-size: 12px; font-weight: 400; fill: #9ca3af; }
+        .label  { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; }
+        .label-playing { fill: #6366f1; }
+        .label-paused  { fill: #9ca3af; }
+        .no-media { font-size: 16px; font-weight: 500; fill: #9ca3af; text-anchor: middle; }
         {{ custom_css | safe }}
     </style>
-    
-    <!-- Background -->
-    <rect width="400" height="120" class="background" />
-    <!-- Border -->
-    <rect width="400" height="120" class="border" />
-    
+
+    <rect x="0.5" y="0.5" width="399" height="119" rx="18" fill="url(#skyBg)" stroke="#e9ebef" stroke-width="1"/>
+
     <g class="container">
         {% if media_info and media_info.title %}
+            {% set has_album = media_info.album %}
+            <!-- Album art (circular) -->
             {% if media_info.album_art_b64 %}
-                <!-- Album art (circular) -->
-                <image href="data:image/png;base64,{{ media_info.album_art_b64 }}" 
-                       x="25" y="25" height="70" width="70" 
-                       clip-path="url(#circleClip)" />
+                <circle cx="62" cy="60" r="40" fill="#ffffff" filter="url(#skyShadow)"/>
+                <image href="data:image/png;base64,{{ media_info.album_art_b64 }}"
+                       x="24" y="22" width="76" height="76" clip-path="url(#skyCircle)"
+                       preserveAspectRatio="xMidYMid slice"/>
+                <circle cx="62" cy="60" r="38" fill="none" stroke="#000000" stroke-opacity="0.06" stroke-width="1"/>
             {% else %}
-                <!-- Placeholder circle -->
-                <circle cx="60" cy="60" r="35" class="placeholder-circle" />
-                <path d="M50 45 L50 75 L55 70 L55 40 L75 35 L75 65 L80 60 L80 30 Z" 
-                      class="music-note" />
+                <circle cx="62" cy="60" r="40" fill="#ffffff" filter="url(#skyShadow)"/>
+                <circle cx="62" cy="60" r="38" fill="#eef0f4"/>
+                <path d="M55 47 v22 a7 7 0 1 1 -4 -6 V52 l16 -4 v15 a7 7 0 1 1 -4 -6 V44 Z" fill="#c4c9d4"/>
             {% endif %}
-            
-            <!-- Accent line -->
-            <line x1="120" y1="30" x2="380" y2="30" class="accent-line" />
-            
-            <!-- Text content -->
-            <text x="120" y="50" class="title">
-                {% set max_title_length = 25 %}
-                {% if media_info.title|length > max_title_length %}
-                    {{ media_info.title[:max_title_length] }}...
-                {% else %}
-                    {{ media_info.title }}
-                {% endif %}
-            </text>
-            <text x="120" y="70" class="artist">
-                {% set max_artist_length = 35 %}
-                {% if media_info.artist|length > max_artist_length %}
-                    {{ media_info.artist[:max_artist_length] }}...
-                {% else %}
-                    {{ media_info.artist }}
-                {% endif %}
-            </text>
-            {% if media_info.album %}
-            <text x="120" y="85" class="album">
-                {% set max_album_length = 40 %}
-                {% if media_info.album|length > max_album_length %}
-                    {{ media_info.album[:max_album_length] }}...
-                {% else %}
-                    {{ media_info.album }}
-                {% endif %}
-            </text>
+
+            <!-- Text -->
+            <text x="124" y="{{ 50 if has_album else 56 }}" class="title">{{ (media_info.title)|truncate(24, true, '…', 0) }}</text>
+            <text x="124" y="{{ 72 if has_album else 80 }}" class="artist">{{ (media_info.artist or '')|truncate(30, true, '…', 0) }}</text>
+            {% if has_album %}
+            <text x="124" y="92" class="album">{{ (media_info.album)|truncate(34, true, '…', 0) }}</text>
             {% endif %}
-            
-            <!-- Status indicator -->
+
+            <!-- Status -->
             {% if media_info.is_playing %}
-                <text x="380" y="105" class="status-text status-playing" text-anchor="end">● PLAYING</text>
+                <g transform="translate(330, 70)" fill="url(#skyAccent)">
+                    <rect x="0"  width="4" rx="2" y="-8"  height="8" ><animate attributeName="height" values="6;20;6"  dur="0.9s"  begin="0s"    repeatCount="indefinite"/><animate attributeName="y" values="-6;-20;-6"  dur="0.9s"  begin="0s"    repeatCount="indefinite"/></rect>
+                    <rect x="8"  width="4" rx="2" y="-16" height="16"><animate attributeName="height" values="16;7;16" dur="0.8s"  begin="-0.3s" repeatCount="indefinite"/><animate attributeName="y" values="-16;-7;-16" dur="0.8s"  begin="-0.3s" repeatCount="indefinite"/></rect>
+                    <rect x="16" width="4" rx="2" y="-11" height="11"><animate attributeName="height" values="9;22;9"  dur="1.05s" begin="-0.15s" repeatCount="indefinite"/><animate attributeName="y" values="-9;-22;-9"  dur="1.05s" begin="-0.15s" repeatCount="indefinite"/></rect>
+                    <rect x="24" width="4" rx="2" y="-14" height="14"><animate attributeName="height" values="13;5;13" dur="0.75s" begin="-0.5s" repeatCount="indefinite"/><animate attributeName="y" values="-13;-5;-13" dur="0.75s" begin="-0.5s" repeatCount="indefinite"/></rect>
+                </g>
+                <text x="376" y="92" class="label label-playing" text-anchor="end">NOW PLAYING</text>
             {% else %}
-                <text x="380" y="105" class="status-text status-paused" text-anchor="end">■ PAUSED</text>
+                <g transform="translate(338, 56)" fill="#c4c9d4">
+                    <rect x="0" y="-9" width="5" height="18" rx="2"/>
+                    <rect x="9" y="-9" width="5" height="18" rx="2"/>
+                </g>
+                <text x="376" y="92" class="label label-paused" text-anchor="end">PAUSED</text>
             {% endif %}
         {% else %}
-            <!-- No media playing -->
-            <text x="200" y="65" class="no-media">No music playing</text>
+            <circle cx="62" cy="60" r="38" fill="#eef0f4"/>
+            <path d="M55 47 v22 a7 7 0 1 1 -4 -6 V52 l16 -4 v15 a7 7 0 1 1 -4 -6 V44 Z" fill="#c4c9d4"/>
+            <text x="250" y="65" class="no-media">No music playing</text>
         {% endif %}
     </g>
 </svg>

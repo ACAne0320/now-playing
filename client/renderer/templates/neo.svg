@@ -1,167 +1,80 @@
-<svg width="400" height="120" xmlns="http://www.w3.org/2000/svg">
+<svg width="400" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Now playing">
     <defs>
-        <!-- Background gradient -->
-        <linearGradient id="darkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+        <linearGradient id="neoBg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0f172a"/>
+            <stop offset="100%" stop-color="#1b2740"/>
         </linearGradient>
-        
-        <!-- Playing indicator gradient -->
-        <linearGradient id="playingGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#06ffa5;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
+        <linearGradient id="neoAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#06ffa5"/>
+            <stop offset="100%" stop-color="#00d4ff"/>
         </linearGradient>
-        
-        <!-- Glow effect -->
-        <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-            <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-        </filter>
-        
-        <!-- Album art mask -->
-        <clipPath id="roundedMask">
-            <rect x="20" y="20" width="80" height="80" rx="8" ry="8"/>
+        <clipPath id="neoArt">
+            <rect x="18" y="18" width="84" height="84" rx="10"/>
         </clipPath>
+        <filter id="neoGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2.2" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
     </defs>
-    
+
     <style>
-        .container { 
-            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace; 
-        }
-        .background { 
-            fill: url(#darkGradient); 
-        }
-        .border { 
-            fill: none; 
-            stroke: #334155; 
-            stroke-width: 1;
-        }
-        .title { 
-            font-size: 16px; 
-            font-weight: 600; 
-            fill: #f1f5f9; 
-        }
-        .artist { 
-            font-size: 13px; 
-            font-weight: 400;
-            fill: #cbd5e1; 
-        }
-        .album { 
-            font-size: 11px; 
-            font-weight: 300;
-            fill: #94a3b8; 
-        }
-        .accent-bar { 
-            fill: url(#playingGradient); 
-            filter: url(#glow);
-        }
-        .status-indicator { 
-            font-size: 12px; 
-            font-weight: 500;
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-        }
-        .status-playing { 
-            fill: #06ffa5; 
-        }
-        .status-paused { 
-            fill: #fbbf24; 
-        }
-        .no-media { 
-            font-size: 16px; 
-            font-weight: 400;
-            fill: #64748b; 
-            text-anchor: middle; 
-        }
-        .placeholder-bg {
-            fill: #1e293b;
-            stroke: #334155;
-            stroke-width: 1;
-        }
-        .code-brackets {
-            fill: #06ffa5;
-            font-weight: 700;
-        }
-        .waveform {
-            fill: none;
-            stroke: url(#playingGradient);
-            stroke-width: 2;
-            stroke-linecap: round;
-        }
-        
-        /* User custom CSS will be injected here */
+        .mono   { font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, 'SF Mono', Menlo, 'Courier New', monospace; }
+        .title  { font-size: 15px; font-weight: 700; fill: #e2e8f0; }
+        .artist { font-size: 12px; font-weight: 400; fill: #94a3b8; }
+        .album  { font-size: 11px; font-weight: 400; fill: #64748b; }
+        .bracket{ font-size: 15px; font-weight: 700; fill: #06ffa5; }
+        .label  { font-size: 10px; font-weight: 700; letter-spacing: 1px; }
+        .label-playing { fill: #06ffa5; }
+        .label-paused  { fill: #fbbf24; }
+        .no-media { font-size: 15px; font-weight: 500; fill: #64748b; text-anchor: middle; }
+        .hint { font-size: 11px; fill: #475569; text-anchor: middle; }
         {{ custom_css | safe }}
     </style>
-    
-    <!-- Background -->
-    <rect width="400" height="120" class="background" />
-    <!-- Border -->
-    <rect width="400" height="120" class="border" />
-    
-    <g class="container">
+
+    <rect x="0.5" y="0.5" width="399" height="119" rx="14" fill="url(#neoBg)" stroke="#334155" stroke-width="1"/>
+
+    <g class="mono">
         {% if media_info and media_info.title %}
+            {% set has_album = media_info.album %}
             {% if media_info.album_art_b64 %}
-                <!-- Album art -->
-                <image href="data:image/png;base64,{{ media_info.album_art_b64 }}" 
-                       x="20" y="20" height="80" width="80" 
-                       clip-path="url(#roundedMask)" />
+                <image href="data:image/png;base64,{{ media_info.album_art_b64 }}"
+                       x="18" y="18" width="84" height="84" clip-path="url(#neoArt)"
+                       preserveAspectRatio="xMidYMid slice"/>
+                <rect x="18" y="18" width="84" height="84" rx="10" fill="none" stroke="#06ffa5" stroke-opacity="0.25"/>
             {% else %}
-                <!-- Placeholder -->
-                <rect x="20" y="20" width="80" height="80" rx="8" ry="8" 
-                      class="placeholder-bg" />
-                <text x="60" y="55" class="code-brackets" text-anchor="middle">♪</text>
-                <text x="60" y="70" style="font-size: 10px; fill: #64748b; text-anchor: middle;">AUDIO</text>
+                <rect x="18" y="18" width="84" height="84" rx="10" fill="#1e293b" stroke="#334155"/>
+                <text x="60" y="56" text-anchor="middle" font-size="22" fill="#06ffa5">♪</text>
+                <text x="60" y="74" text-anchor="middle" font-size="9" fill="#64748b">AUDIO</text>
             {% endif %}
-            
-            <!-- Code-style brackets -->
-            <text x="115" y="35" class="code-brackets">[</text>
-            <text x="385" y="35" class="code-brackets">]</text>
-            
-            <!-- Text content -->
-            <text x="125" y="35" class="title">
-                {% set max_title_length = 22 %}
-                {% if media_info.title|length > max_title_length %}
-                    {{ media_info.title[:max_title_length] }}...
-                {% else %}
-                    {{ media_info.title }}
-                {% endif %}
-            </text>
-            <text x="125" y="52" class="artist">
-                {% set max_artist_length = 28 %}
-                {% if media_info.artist|length > max_artist_length %}
-                    {{ media_info.artist[:max_artist_length] }}...
-                {% else %}
-                    {{ media_info.artist }}
-                {% endif %}
-            </text>
-            {% if media_info.album %}
-            <text x="125" y="68" class="album">
-                {% set max_album_length = 30 %}
-                {% if media_info.album|length > max_album_length %}
-                    {{ media_info.album[:max_album_length] }}...
-                {% else %}
-                    {{ media_info.album }}
-                {% endif %}
-            </text>
+
+            <!-- Title with code brackets -->
+            <text x="118" y="{{ 44 if has_album else 52 }}" class="bracket">[</text>
+            <text x="130" y="{{ 44 if has_album else 52 }}" class="title">{{ (media_info.title)|truncate(24, true, '…', 0) }}</text>
+            <text x="382" y="{{ 44 if has_album else 52 }}" class="bracket" text-anchor="end">]</text>
+
+            <text x="120" y="{{ 64 if has_album else 74 }}" class="artist">{{ (media_info.artist or '')|truncate(30, true, '…', 0) }}</text>
+            {% if has_album %}
+            <text x="120" y="82" class="album">{{ (media_info.album)|truncate(34, true, '…', 0) }}</text>
             {% endif %}
-            
-            <!-- Status and accent bar -->
+
             {% if media_info.is_playing %}
-                <rect x="20" y="105" width="360" height="3" class="accent-bar" />
-                <text x="380" y="98" class="status-indicator status-playing" text-anchor="end">▶ PLAYING</text>
-                <!-- Animated waveform -->
-                <path d="M125 85 L130 82 L135 88 L140 80 L145 85 L150 83 L155 87 L160 81" 
-                      class="waveform" />
+                <g transform="translate(120, 100)" fill="url(#neoAccent)" filter="url(#neoGlow)">
+                    <rect x="0"  width="3" rx="1.5" y="-6"  height="6" ><animate attributeName="height" values="4;12;4"  dur="0.85s" begin="0s"     repeatCount="indefinite"/><animate attributeName="y" values="-4;-12;-4"  dur="0.85s" begin="0s"     repeatCount="indefinite"/></rect>
+                    <rect x="6"  width="3" rx="1.5" y="-10" height="10"><animate attributeName="height" values="10;4;10" dur="0.75s" begin="-0.3s"  repeatCount="indefinite"/><animate attributeName="y" values="-10;-4;-10" dur="0.75s" begin="-0.3s"  repeatCount="indefinite"/></rect>
+                    <rect x="12" width="3" rx="1.5" y="-8"  height="8" ><animate attributeName="height" values="5;13;5"  dur="0.95s" begin="-0.15s" repeatCount="indefinite"/><animate attributeName="y" values="-5;-13;-5"  dur="0.95s" begin="-0.15s" repeatCount="indefinite"/></rect>
+                    <rect x="18" width="3" rx="1.5" y="-9"  height="9" ><animate attributeName="height" values="9;4;9"   dur="0.7s"  begin="-0.5s"  repeatCount="indefinite"/><animate attributeName="y" values="-9;-4;-9"   dur="0.7s"  begin="-0.5s"  repeatCount="indefinite"/></rect>
+                </g>
+                <rect x="18" y="106" width="364" height="2.5" rx="1.25" fill="url(#neoAccent)"/>
+                <text x="382" y="98" class="label label-playing" text-anchor="end">&#9654; PLAYING</text>
             {% else %}
-                <rect x="20" y="105" width="360" height="3" fill="#334155" />
-                <text x="380" y="98" class="status-indicator status-paused" text-anchor="end">⏸ PAUSED</text>
+                <rect x="18" y="106" width="364" height="2.5" rx="1.25" fill="#334155"/>
+                <text x="382" y="98" class="label label-paused" text-anchor="end">&#10073;&#10073; PAUSED</text>
             {% endif %}
         {% else %}
-            <!-- No media playing -->
-            <text x="200" y="55" class="no-media">{ no_media_playing }</text>
-            <text x="200" y="75" style="font-size: 12px; fill: #475569; text-anchor: middle;">// waiting for audio input</text>
+            <rect x="18" y="18" width="84" height="84" rx="10" fill="#1e293b" stroke="#334155"/>
+            <text x="60" y="66" text-anchor="middle" font-size="26" fill="#334155">♪</text>
+            <text x="250" y="52" class="no-media">{ no_signal }</text>
+            <text x="250" y="74" class="hint">// waiting for audio input</text>
         {% endif %}
     </g>
 </svg>

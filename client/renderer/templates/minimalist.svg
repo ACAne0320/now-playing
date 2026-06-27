@@ -1,65 +1,37 @@
-<svg width="300" height="80" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="300" height="80" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Now playing">
+    <defs>
+        <filter id="minShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#1f2937" flood-opacity="0.1"/>
+        </filter>
+    </defs>
+
     <style>
-        .container { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-        }
-        .background { 
-            fill: #ffffff; 
-            stroke: #e1e1e1; 
-            stroke-width: 1; 
-        }
-        .title { 
-            font-size: 14px; 
-            font-weight: 500; 
-            fill: #333333; 
-        }
-        .artist { 
-            font-size: 12px; 
-            fill: #666666; 
-        }
-        .status-dot-playing { 
-            fill: #1ed760; 
-        }
-        .status-dot-paused { 
-            fill: #888888; 
-        }
-        .no-media { 
-            font-size: 12px; 
-            fill: #999999; 
-            text-anchor: middle; 
-        }
-        
-        /* User custom CSS will be injected here */
+        .container { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .title  { font-size: 15px; font-weight: 600; fill: #1f2937; letter-spacing: -0.2px; }
+        .artist { font-size: 12px; font-weight: 400; fill: #9ca3af; }
+        .no-media { font-size: 13px; font-weight: 500; fill: #9ca3af; text-anchor: middle; }
         {{ custom_css | safe }}
     </style>
-    
-    <!-- Background -->
-    <rect width="300" height="80" class="background" rx="8" />
-    
+
+    <rect x="0.5" y="0.5" width="299" height="79" rx="14" fill="#ffffff" stroke="#ececec" stroke-width="1" filter="url(#minShadow)"/>
+
     <g class="container">
         {% if media_info and media_info.title %}
-            <text x="15" y="30" class="title">
-                {% set max_title_length = 35 %}
-                {% if media_info.title|length > max_title_length %}
-                    {{ media_info.title[:max_title_length] }}...
-                {% else %}
-                    {{ media_info.title }}
-                {% endif %}
-            </text>
-            <text x="15" y="50" class="artist">
-                {% set max_artist_length = 40 %}
-                {% if media_info.artist|length > max_artist_length %}
-                    {{ media_info.artist[:max_artist_length] }}...
-                {% else %}
-                    {{ media_info.artist }}
-                {% endif %}
-            </text>
-
             {% if media_info.is_playing %}
-                <circle cx="280" cy="65" r="3" class="status-playing" />
+                <g transform="translate(22, 52)" fill="#1ed760">
+                    <rect x="0"  width="3" rx="1.5" y="-6"  height="6" ><animate attributeName="height" values="4;15;4"  dur="0.9s"  begin="0s"     repeatCount="indefinite"/><animate attributeName="y" values="-4;-15;-4"  dur="0.9s"  begin="0s"     repeatCount="indefinite"/></rect>
+                    <rect x="6"  width="3" rx="1.5" y="-12" height="12"><animate attributeName="height" values="12;5;12" dur="0.8s"  begin="-0.3s"  repeatCount="indefinite"/><animate attributeName="y" values="-12;-5;-12" dur="0.8s"  begin="-0.3s"  repeatCount="indefinite"/></rect>
+                    <rect x="12" width="3" rx="1.5" y="-9"  height="9" ><animate attributeName="height" values="7;16;7"  dur="1.0s"  begin="-0.15s" repeatCount="indefinite"/><animate attributeName="y" values="-7;-16;-7"  dur="1.0s"  begin="-0.15s" repeatCount="indefinite"/></rect>
+                </g>
             {% else %}
-                <circle cx="280" cy="65" r="3" class="status-paused" />
+                <g transform="translate(24, 32)" fill="#c4c9d4">
+                    <rect x="0" y="0" width="4" height="16" rx="2"/>
+                    <rect x="7" y="0" width="4" height="16" rx="2"/>
+                </g>
             {% endif %}
+
+            <text x="48" y="35" class="title">{{ (media_info.title)|truncate(28, true, '…', 0) }}</text>
+            <text x="48" y="55" class="artist">{{ (media_info.artist or '')|truncate(34, true, '…', 0) }}</text>
         {% else %}
             <text x="150" y="45" class="no-media">No music playing</text>
         {% endif %}
