@@ -100,16 +100,47 @@ class RedisStore(MediaStore):
         return [k[len(self.PREFIX):] for k in result if k.startswith(self.PREFIX)]
 
 
-def create_store() -> MediaStore:
-    """Return a Redis-backed store when KV env vars are set, else in-memory.
+def _kv_credentials() -> tuple[Optional[str], Optional[str]]:
+    """Find the KV REST URL + read-write token from the environment.
 
-    Supports both Vercel KV (``KV_REST_API_*``) and standalone Upstash
-    (``UPSTASH_REDIS_REST_*``) variable names.
+    Tries well-known names first (Vercel KV / standalone Upstash), then
+    discovers by suffix because the Upstash Vercel Marketplace integration
+    may inject prefixed names like ``UPSTASH_REDIS_<name>_REST_API_URL``.
+    Only HTTP(S) REST endpoints are accepted (the ``redis://`` TCP URLs that
+    Upstash also injects cannot be used by the REST client).
     """
-    url = os.environ.get("KV_REST_API_URL") or os.environ.get("UPSTASH_REDIS_REST_URL")
-    token = os.environ.get("KV_REST_API_TOKEN") or os.environ.get(
-        "UPSTASH_REDIS_REST_TOKEN"
-    )
+    env = os.environ
+
+    for url_key, tok_key in (
+        ("KV_REST_API_URL", "KV_REST_API_TOKEN"),
+        ("UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"),
+    ):
+        if env.get(url_key) and env.get(tok_key):
+            return env[url_key], env[tok_key]
+
+    url: Optional[str] = None
+    for key, val in env.items():
+        if val and val.startswith("http") and key.upper().endswith(
+            ("REST_API_URL", "REST_URL")
+        ):
+            url = val
+            break
+
+    tokens: list[tuple[int, str]] = []
+    for key, val in env.items():
+        upper = key.upper()
+        if val and upper.endswith(("REST_API_TOKEN", "REST_TOKEN")):
+            read_only = 1 if ("READ_ONLY" in upper or "READONLY" in upper) else 0
+            tokens.append((read_only, val))
+    tokens.sort(key=lambda item: item[0])  # prefer the read-write token
+    token = tokens[0][1] if tokens else None
+
+    return url, token
+
+
+def create_store() -> MediaStore:
+    """Return a Redis-backed store when KV env vars are present, else in-memory."""
+    url, token = _kv_credentials()
     if url and token:
         try:
             return RedisStore(url, token)
