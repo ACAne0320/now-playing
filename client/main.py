@@ -5,15 +5,17 @@ import time
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 from fastapi import Depends, FastAPI, HTTPException, Response
+from fastapi.concurrency import run_in_threadpool
 from fastapi.staticfiles import StaticFiles
 
 from .models import MediaInfo
 from .poller.base import BasePoller
 from .poller.factory import create_poller
 from .renderer.engine import Renderer
+from .store import MediaStore, create_store
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from config import get_config
@@ -31,7 +33,7 @@ class AppState:
     def __init__(self):
         self.poller: Optional[BasePoller] = None
         self.renderer: Optional[Renderer] = None
-        self.media_cache: dict[str, Any] = {}
+        self.store: MediaStore = create_store()
         self.start_time: float = 0
         self.debug_info: list[str] = []  # 添加调试信息存储
 
@@ -44,6 +46,9 @@ async def lifespan(app: FastAPI):
     """Manage application lifespan - startup and shutdown events."""
 
     app_state.start_time = time.time()
+
+    if PUBLIC_MODE:
+        logger.info("Public mode media store backend: %s", app_state.store.backend)
 
     if not PUBLIC_MODE:
         exclude_browsers = config.get("server.exclude_browsers", False)
@@ -129,9 +134,9 @@ def get_renderer() -> Optional[Renderer]:
     return app_state.renderer
 
 
-def get_media_cache() -> dict[str, Any]:
-    """Dependency to get the media cache."""
-    return app_state.media_cache
+def get_store() -> MediaStore:
+    """Dependency to get the shared media store."""
+    return app_state.store
 
 
 app = FastAPI(
@@ -165,19 +170,20 @@ async def get_now_playing_svg(
     user_id: Optional[str] = None,
     poller: Optional[BasePoller] = Depends(get_poller),
     renderer: Optional[Renderer] = Depends(get_renderer),
-    media_cache: dict[str, Any] = Depends(get_media_cache),
+    store: MediaStore = Depends(get_store),
 ):
     """Get the current playing media as an SVG image."""
 
     if PUBLIC_MODE:
-        # In public mode, get data from cache
+        # In public mode, read shared state so every template instance agrees.
         cache_key = user_id or "default"
-        cached_data = media_cache.get(cache_key)
+        try:
+            cached_data = await run_in_threadpool(store.get, cache_key)
+        except Exception as exc:
+            logger.warning("Store read failed: %s", exc)
+            cached_data = None
 
-        if cached_data:
-            media_info = MediaInfo.from_dict(cached_data) if cached_data else None
-        else:
-            media_info = None
+        media_info = MediaInfo.from_dict(cached_data) if cached_data else None
     else:
         # In local mode, get data from poller
         if not poller:
@@ -234,7 +240,7 @@ async def update_media_info(
     request: dict,
     api_key: str = None,
     user_id: Optional[str] = None,
-    media_cache: dict[str, Any] = Depends(get_media_cache),
+    store: MediaStore = Depends(get_store),
 ):
     """Update cached media information (public mode only)."""
     if not PUBLIC_MODE:
@@ -247,27 +253,34 @@ async def update_media_info(
         raise HTTPException(status_code=401, detail="Invalid API key")
 
     cache_key = user_id or "default"
-    media_cache[cache_key] = request.get("media_info")
-    media_cache[f"{cache_key}_timestamp"] = datetime.now().isoformat()
+    try:
+        await run_in_threadpool(store.set, cache_key, request.get("media_info"))
+    except Exception as exc:
+        logger.error("Store write failed: %s", exc)
+        raise HTTPException(status_code=502, detail="Failed to persist media state")
 
-    return {"status": "updated", "user_id": cache_key}
+    return {"status": "updated", "user_id": cache_key, "backend": store.backend}
 
 
 @app.get("/api/v1/status")
 async def get_status(
     poller: Optional[BasePoller] = Depends(get_poller),
-    media_cache: dict[str, Any] = Depends(get_media_cache),
+    store: MediaStore = Depends(get_store),
 ):
     """Get current service status and cached media info."""
     mode = "public" if PUBLIC_MODE else "local"
 
     if PUBLIC_MODE:
+        try:
+            cache_keys = await run_in_threadpool(store.keys)
+        except Exception as exc:
+            logger.warning("Store keys failed: %s", exc)
+            cache_keys = []
         return {
             "status": "running",
             "mode": mode,
-            "cache_keys": [
-                k for k in media_cache.keys() if not k.endswith("_timestamp")
-            ],
+            "backend": store.backend,
+            "cache_keys": cache_keys,
             "timestamp": datetime.now().isoformat(),
         }
     else:

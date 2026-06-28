@@ -175,6 +175,8 @@ export NOW_PLAYING_API_KEY=your-secure-api-key
 uv run python -m client.main
 ```
 
+> On a **serverless** host (e.g. Vercel) also configure a shared KV store so all template cards stay in sync — see [Vercel deployment](#vercel-recommended). A single long-lived server needs no KV.
+
 **GitHub README Integration:**
 
 ```markdown
@@ -329,9 +331,20 @@ docker run -d -p 8000:8000 \
 
 #### Vercel (Recommended)
 
-```bash
-# coming soon
-```
+1. Import the repo into Vercel (the included `vercel.json` and `api/index.py` are detected automatically).
+2. Add a **shared KV store** so every serverless instance reports the same track (see below), then connect it to the project.
+3. Set the project **Environment Variables**:
+
+   | Variable | Value |
+   |----------|-------|
+   | `PUBLIC_MODE` | `true` |
+   | `NOW_PLAYING_API_KEY` | a secret shared with your local client |
+   | `KV_REST_API_URL` | from your KV store (auto-added if you use Vercel KV) |
+   | `KV_REST_API_TOKEN` | from your KV store (auto-added if you use Vercel KV) |
+
+4. Deploy, then run the local client in [Client Mode](#3-client-mode-remote-data-push) pointed at your Vercel URL.
+
+> **Why the KV store?** In public mode the "now playing" state is shared via Upstash / Vercel KV. Without it the state is kept only in each serverless function's memory, so an update that lands on one instance is invisible to the instance serving another template — causing some README cards to show your track while others show "No music playing". With KV configured, all templates stay in sync. Standalone Upstash works too (`UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`). If no KV variables are set, the server falls back to in-memory storage (fine for a single long-lived server, not for serverless).
 
 ## Development
 
