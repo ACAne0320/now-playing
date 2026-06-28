@@ -49,7 +49,13 @@
             {% else %}
                 <circle cx="62" cy="60" r="40" fill="#ffffff" filter="url(#skyShadow)"/>
                 <circle cx="62" cy="60" r="38" fill="#eef0f4"/>
-                <path d="M55 47 v22 a7 7 0 1 1 -4 -6 V52 l16 -4 v15 a7 7 0 1 1 -4 -6 V44 Z" fill="#c4c9d4"/>
+                <g transform="translate(62,60) scale(1.55)" fill="#c4c9d4">
+                    <path d="M-2.6 -12 L9 -14 L9 -9 L-2.6 -7 Z"/>
+                    <rect x="-2.6" y="-12" width="2.2" height="15.5" rx="1.1"/>
+                    <rect x="6.8" y="-14" width="2.2" height="15.5" rx="1.1"/>
+                    <ellipse cx="-5" cy="3.8" rx="4" ry="3"/>
+                    <ellipse cx="5" cy="1.8" rx="4" ry="3"/>
+                </g>
             {% endif %}
 
             <!-- Text -->
@@ -81,7 +87,13 @@
             {% endif %}
         {% else %}
             <circle cx="62" cy="60" r="38" fill="#eef0f4"/>
-            <path d="M55 47 v22 a7 7 0 1 1 -4 -6 V52 l16 -4 v15 a7 7 0 1 1 -4 -6 V44 Z" fill="#c4c9d4"/>
+            <g transform="translate(62,60) scale(1.55)" fill="#c4c9d4">
+                <path d="M-2.6 -12 L9 -14 L9 -9 L-2.6 -7 Z"/>
+                <rect x="-2.6" y="-12" width="2.2" height="15.5" rx="1.1"/>
+                <rect x="6.8" y="-14" width="2.2" height="15.5" rx="1.1"/>
+                <ellipse cx="-5" cy="3.8" rx="4" ry="3"/>
+                <ellipse cx="5" cy="1.8" rx="4" ry="3"/>
+            </g>
             <text x="250" y="65" class="no-media">No music playing</text>
         {% endif %}
     </g>

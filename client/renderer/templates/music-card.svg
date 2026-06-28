@@ -47,7 +47,13 @@
                 <rect x="16" y="16" width="288" height="288" rx="16" fill="none" stroke="#ffffff" stroke-opacity="0.08"/>
             {% else %}
                 <rect x="16" y="16" width="288" height="288" rx="16" fill="#262626" filter="url(#mcShadow)"/>
-                <path d="M150 120 v70 a16 16 0 1 1 -9 -14 V140 l38 -9 v46 a16 16 0 1 1 -9 -14 V112 Z" fill="#4d4d4d"/>
+                <g transform="translate(160,160) scale(5)" fill="#4d4d4d">
+                    <path d="M-2.6 -12 L9 -14 L9 -9 L-2.6 -7 Z"/>
+                    <rect x="-2.6" y="-12" width="2.2" height="15.5" rx="1.1"/>
+                    <rect x="6.8" y="-14" width="2.2" height="15.5" rx="1.1"/>
+                    <ellipse cx="-5" cy="3.8" rx="4" ry="3"/>
+                    <ellipse cx="5" cy="1.8" rx="4" ry="3"/>
+                </g>
             {% endif %}
 
             <!-- Now playing badge on artwork -->
@@ -82,7 +88,13 @@
             </g>
         {% else %}
             <rect x="16" y="16" width="288" height="288" rx="16" fill="#262626"/>
-            <path d="M150 120 v70 a16 16 0 1 1 -9 -14 V140 l38 -9 v46 a16 16 0 1 1 -9 -14 V112 Z" fill="#3d3d3d"/>
+            <g transform="translate(160,160) scale(5)" fill="#3d3d3d">
+                <path d="M-2.6 -12 L9 -14 L9 -9 L-2.6 -7 Z"/>
+                <rect x="-2.6" y="-12" width="2.2" height="15.5" rx="1.1"/>
+                <rect x="6.8" y="-14" width="2.2" height="15.5" rx="1.1"/>
+                <ellipse cx="-5" cy="3.8" rx="4" ry="3"/>
+                <ellipse cx="5" cy="1.8" rx="4" ry="3"/>
+            </g>
             <text x="160" y="360" class="no-media">No music playing</text>
         {% endif %}
     </g>

@@ -42,7 +42,13 @@
                        preserveAspectRatio="xMidYMid slice" filter="url(#plSoft)"/>
             {% else %}
                 <rect x="28" y="28" width="64" height="64" rx="14" fill="#e9edf3" filter="url(#plSoft)"/>
-                <text x="60" y="68" text-anchor="middle" font-size="24" fill="#94a3b8">♪</text>
+                <g transform="translate(60,60) scale(1.35)" fill="#94a3b8">
+                    <path d="M-2.6 -12 L9 -14 L9 -9 L-2.6 -7 Z"/>
+                    <rect x="-2.6" y="-12" width="2.2" height="15.5" rx="1.1"/>
+                    <rect x="6.8" y="-14" width="2.2" height="15.5" rx="1.1"/>
+                    <ellipse cx="-5" cy="3.8" rx="4" ry="3"/>
+                    <ellipse cx="5" cy="1.8" rx="4" ry="3"/>
+                </g>
             {% endif %}
 
             <g mask="url(#plText)">
@@ -70,7 +76,13 @@
             {% endif %}
         {% else %}
             <rect x="28" y="28" width="64" height="64" rx="14" fill="#e9edf3" filter="url(#plSoft)"/>
-            <text x="60" y="68" text-anchor="middle" font-size="24" fill="#cbd5e1">♪</text>
+            <g transform="translate(60,60) scale(1.35)" fill="#cbd5e1">
+                <path d="M-2.6 -12 L9 -14 L9 -9 L-2.6 -7 Z"/>
+                <rect x="-2.6" y="-12" width="2.2" height="15.5" rx="1.1"/>
+                <rect x="6.8" y="-14" width="2.2" height="15.5" rx="1.1"/>
+                <ellipse cx="-5" cy="3.8" rx="4" ry="3"/>
+                <ellipse cx="5" cy="1.8" rx="4" ry="3"/>
+            </g>
             <text x="240" y="65" class="no-media">No music playing</text>
         {% endif %}
     </g>
