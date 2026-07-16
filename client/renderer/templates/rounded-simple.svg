@@ -14,7 +14,7 @@
         .container { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         .title { font-size: 16px; font-weight: 700; fill: #f7f7f5; letter-spacing: -0.15px; }
         .artist { font-size: 13px; font-weight: 400; fill: #999994; }
-        .status { font-size: 10px; font-weight: 600; fill: #999994; text-anchor: middle; }
+        .status { font-size: 10px; font-weight: 600; fill: #999994; }
         .status-playing { fill: #1ed760; }
         .no-media { font-size: 14px; font-weight: 500; fill: #8a8a85; }
         {{ custom_css | safe }}
@@ -25,7 +25,7 @@
     <g class="container">
         {% if media_info and media_info.title %}
             {% if media_info.album_art_b64 %}
-                <image href="data:image/png;base64,{{ media_info.album_art_b64 }}"
+                <image href="{{ media_info.album_art_data_uri }}"
                        x="24" y="36" width="48" height="48" clip-path="url(#simpArt)"
                        preserveAspectRatio="xMidYMid slice"/>
             {% else %}
@@ -39,14 +39,14 @@
             </g>
 
             {% if media_info.is_playing %}
-                <path class="status-playing" d="M340 48 L340 64 L353 56 Z"/>
-                <text x="346" y="79" class="status">Playing</text>
+                <path class="status-playing" d="M326 53 L326 63 L335 58 Z"/>
+                <text x="342" y="62" class="status">Playing</text>
             {% else %}
                 <g fill="#686864">
-                    <rect x="340" y="48" width="4" height="16" rx="1"/>
-                    <rect x="348" y="48" width="4" height="16" rx="1"/>
+                    <rect x="326" y="53" width="3" height="10" rx="1"/>
+                    <rect x="332" y="53" width="3" height="10" rx="1"/>
                 </g>
-                <text x="346" y="79" class="status">Paused</text>
+                <text x="342" y="62" class="status">Paused</text>
             {% endif %}
         {% else %}
             <rect x="24" y="36" width="48" height="48" rx="4" fill="#292927"/>

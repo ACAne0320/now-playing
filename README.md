@@ -32,16 +32,17 @@ Pick a style by adding `?template=<name>` to the card URL. A few favorites are s
     </td>
   </tr>
   <tr>
-    <td align="center">
+    <td align="center" colspan="2">
       <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=neo" alt="neo template" width="400"><br>
       <sub><code>neo</code></sub>
     </td>
-    <td align="center">
-      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=music-card" alt="music-card template" height="240"><br>
-      <sub><code>music-card</code></sub>
-    </td>
   </tr>
 </table>
+
+<p align="center">
+  <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=music-card" alt="music-card template" width="320"><br>
+  <sub><code>music-card</code></sub>
+</p>
 
 <details>
   <summary><b>Show the other 4 templates »</b></summary>
@@ -62,9 +63,9 @@ Pick a style by adding `?template=<name>` to the card URL. A few favorites are s
         <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=rounded-simple" alt="rounded-simple template" width="400"><br>
         <sub><code>rounded-simple</code></sub>
       </td>
-      <td align="center">
+      <td align="center" bgcolor="#e9edf1">
         <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=minimalist" alt="minimalist template" width="300"><br>
-        <sub><code>minimalist</code></sub>
+        <sub><code>minimalist</code> · transparent overlay</sub>
       </td>
     </tr>
   </table>

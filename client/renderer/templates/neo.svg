@@ -14,11 +14,16 @@
         .container { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         .title { font-size: 17px; font-weight: 700; fill: #f0f2f1; letter-spacing: -0.2px; }
         .artist { font-size: 13px; font-weight: 500; fill: #a7aca9; }
-        .album { font-size: 11px; font-weight: 400; fill: #6f7773; }
+        .album { font-size: 11px; font-weight: 400; fill: #858d89; }
         .status { font-size: 11px; font-weight: 600; fill: #a7aca9; }
         .status-playing { fill: #1ed760; }
         .no-media { font-size: 15px; font-weight: 500; fill: #7f8884; }
         .hint { font-size: 11px; fill: #58615d; }
+        .meter-static { display: none; }
+        @media (prefers-reduced-motion: reduce) {
+            .meter-motion { display: none; }
+            .meter-static { display: inline; }
+        }
         {{ custom_css | safe }}
     </style>
 
@@ -29,7 +34,7 @@
         {% if media_info and media_info.title %}
             {% set has_album = media_info.album %}
             {% if media_info.album_art_b64 %}
-                <image href="data:image/png;base64,{{ media_info.album_art_b64 }}"
+                <image href="{{ media_info.album_art_data_uri }}"
                        x="8" y="8" width="104" height="104" clip-path="url(#neoArt)"
                        preserveAspectRatio="xMidYMid slice"/>
             {% else %}
@@ -54,7 +59,7 @@
             </g>
 
             {% if media_info.is_playing %}
-                <g class="status-playing" transform="translate(363, 92)">
+                <g class="status-playing meter-motion" transform="translate(363, 92)">
                     <rect x="0" width="3" rx="1" y="-8" height="8">
                         <animate attributeName="height" values="5;14;5" dur="0.9s" repeatCount="indefinite"/>
                         <animate attributeName="y" values="-5;-14;-5" dur="0.9s" repeatCount="indefinite"/>
@@ -67,6 +72,11 @@
                         <animate attributeName="height" values="7;16;7" dur="1.05s" begin="-0.4s" repeatCount="indefinite"/>
                         <animate attributeName="y" values="-7;-16;-7" dur="1.05s" begin="-0.4s" repeatCount="indefinite"/>
                     </rect>
+                </g>
+                <g class="status-playing meter-static" transform="translate(363, 92)">
+                    <rect x="0" y="-7" width="3" height="7" rx="1"/>
+                    <rect x="7" y="-13" width="3" height="13" rx="1"/>
+                    <rect x="14" y="-10" width="3" height="10" rx="1"/>
                 </g>
                 <line x1="132" y1="108" x2="170" y2="108" stroke="#1ed760" stroke-width="2"/>
             {% else %}

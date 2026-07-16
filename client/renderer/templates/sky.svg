@@ -13,9 +13,9 @@
     <style>
         .container { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         .title { font-size: 19px; font-weight: 700; fill: #1c1c1a; letter-spacing: -0.25px; }
-        .artist { font-size: 14px; font-weight: 500; fill: #666661; }
-        .album { font-size: 12px; font-weight: 400; fill: #92928c; }
-        .status { font-size: 11px; font-weight: 600; fill: #666661; }
+        .artist { font-size: 14px; font-weight: 500; fill: #5f5f5a; }
+        .album { font-size: 12px; font-weight: 400; fill: #777772; }
+        .status { font-size: 11px; font-weight: 600; fill: #5f5f5a; }
         .status-playing { fill: #238636; }
         .no-media { font-size: 15px; font-weight: 500; fill: #85857f; }
         {{ custom_css | safe }}
@@ -27,7 +27,7 @@
         {% if media_info and media_info.title %}
             {% set has_album = media_info.album %}
             {% if media_info.album_art_b64 %}
-                <image href="data:image/png;base64,{{ media_info.album_art_b64 }}"
+                <image href="{{ media_info.album_art_data_uri }}"
                        x="19" y="21" width="78" height="78" clip-path="url(#skyArt)"
                        preserveAspectRatio="xMidYMid slice"/>
                 <circle cx="58" cy="60" r="39.5" fill="none" stroke="#1c1c1a" stroke-opacity="0.14"/>
@@ -36,21 +36,21 @@
                 <text x="58" y="69" text-anchor="middle" font-size="28" fill="#aaa9a3">♪</text>
             {% endif %}
 
+            {% if media_info.is_playing %}
+                <circle class="status-playing" cx="121" cy="20" r="3.5"/>
+                <text x="131" y="24" class="status">Playing</text>
+            {% else %}
+                <circle cx="121" cy="20" r="3.5" fill="#999994"/>
+                <text x="131" y="24" class="status">Paused</text>
+            {% endif %}
+
             <g mask="url(#skyText)">
-                <text x="118" y="{{ 46 if has_album else 55 }}" class="title">{{ (media_info.title)|truncate(42, true, '', 0) }}</text>
-                <text x="118" y="{{ 68 if has_album else 79 }}" class="artist">{{ (media_info.artist or '')|truncate(46, true, '', 0) }}</text>
+                <text x="118" y="{{ 50 if has_album else 58 }}" class="title">{{ (media_info.title)|truncate(42, true, '', 0) }}</text>
+                <text x="118" y="{{ 72 if has_album else 81 }}" class="artist">{{ (media_info.artist or '')|truncate(46, true, '', 0) }}</text>
                 {% if has_album %}
-                <text x="118" y="88" class="album">{{ (media_info.album)|truncate(48, true, '', 0) }}</text>
+                <text x="118" y="92" class="album">{{ (media_info.album)|truncate(48, true, '', 0) }}</text>
                 {% endif %}
             </g>
-
-            {% if media_info.is_playing %}
-                <circle class="status-playing" cx="350" cy="96" r="3.5"/>
-                <text x="360" y="100" class="status">Playing</text>
-            {% else %}
-                <circle cx="350" cy="96" r="3.5" fill="#aaa9a3"/>
-                <text x="360" y="100" class="status">Paused</text>
-            {% endif %}
         {% else %}
             <circle cx="58" cy="60" r="39" fill="#efefec"/>
             <text x="58" y="69" text-anchor="middle" font-size="28" fill="#aaa9a3">♪</text>

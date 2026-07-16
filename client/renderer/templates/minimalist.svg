@@ -4,7 +4,7 @@
             <stop offset="0.88" stop-color="#ffffff"/>
             <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
-        <mask id="minText"><rect x="18" y="14" width="232" height="52" fill="url(#minFade)"/></mask>
+        <mask id="minText"><rect x="24" y="14" width="226" height="52" fill="url(#minFade)"/></mask>
     </defs>
 
     <style>
@@ -19,27 +19,27 @@
     <g class="container">
         {% if media_info and media_info.title %}
             {% if media_info.is_playing %}
-                <line class="status-playing" x1="1" y1="10" x2="1" y2="70" stroke-width="2"/>
+                <line class="status-playing" x1="8" y1="10" x2="8" y2="70" stroke-width="2"/>
             {% else %}
-                <line x1="1" y1="10" x2="1" y2="70" stroke="#b9b9b3" stroke-width="2"/>
+                <line x1="8" y1="10" x2="8" y2="70" stroke="#b9b9b3" stroke-width="2"/>
             {% endif %}
 
             <g mask="url(#minText)">
-                <text x="18" y="34" class="title">{{ (media_info.title)|truncate(38, true, '', 0) }}</text>
-                <text x="18" y="55" class="artist">{{ (media_info.artist or '')|truncate(44, true, '', 0) }}</text>
+                <text x="24" y="34" class="title">{{ (media_info.title)|truncate(38, true, '', 0) }}</text>
+                <text x="24" y="55" class="artist">{{ (media_info.artist or '')|truncate(44, true, '', 0) }}</text>
             </g>
 
             {% if media_info.is_playing %}
-                <path class="status-playing" d="M270 32 L270 48 L283 40 Z" stroke="none"/>
+                <path class="status-playing" d="M272 34 L272 46 L282 40 Z" stroke="none"/>
             {% else %}
                 <g fill="#999994">
-                    <rect x="270" y="32" width="4" height="16" rx="1"/>
-                    <rect x="278" y="32" width="4" height="16" rx="1"/>
+                    <rect x="272" y="34" width="3" height="12" rx="1"/>
+                    <rect x="278" y="34" width="3" height="12" rx="1"/>
                 </g>
             {% endif %}
         {% else %}
-            <line x1="1" y1="10" x2="1" y2="70" stroke="#b9b9b3" stroke-width="2"/>
-            <text x="18" y="45" class="no-media">Nothing is playing</text>
+            <line x1="8" y1="10" x2="8" y2="70" stroke="#b9b9b3" stroke-width="2"/>
+            <text x="24" y="45" class="no-media">Nothing is playing</text>
         {% endif %}
     </g>
 </svg>

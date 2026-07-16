@@ -1,21 +1,21 @@
 <svg width="400" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Now playing">
     <defs>
         <clipPath id="plArt">
-            <rect x="304" y="16" width="80" height="88" rx="4"/>
+            <rect x="316" y="18" width="68" height="84" rx="4"/>
         </clipPath>
         <linearGradient id="plFade">
             <stop offset="0.88" stop-color="#ffffff"/>
             <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
-        <mask id="plText"><rect x="84" y="24" width="202" height="72" fill="url(#plFade)"/></mask>
+        <mask id="plText"><rect x="24" y="34" width="274" height="66" fill="url(#plFade)"/></mask>
     </defs>
 
     <style>
         .container { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         .title { font-size: 17px; font-weight: 700; fill: #1c1c1a; letter-spacing: -0.2px; }
         .artist { font-size: 13px; font-weight: 500; fill: #62625e; }
-        .album { font-size: 11px; font-weight: 400; fill: #8b8b85; }
-        .status { font-size: 10px; font-weight: 600; fill: #62625e; text-anchor: middle; }
+        .album { font-size: 11px; font-weight: 400; fill: #777772; }
+        .status { font-size: 10px; font-weight: 600; fill: #62625e; }
         .status-playing { fill: #238636; }
         .no-media { font-size: 15px; font-weight: 500; fill: #777772; }
         {{ custom_css | safe }}
@@ -28,40 +28,33 @@
             {% set has_album = media_info.album %}
 
             {% if media_info.is_playing %}
-                <rect class="status-playing" x="20" y="34" width="44" height="44" rx="5"/>
-                <g fill="#ffffff">
-                    <rect x="35" y="46" width="4" height="20" rx="1"/>
-                    <rect x="45" y="46" width="4" height="20" rx="1"/>
-                </g>
-                <text x="42" y="94" class="status">Playing</text>
+                <circle class="status-playing" cx="28" cy="24" r="3.5"/>
+                <text x="38" y="28" class="status">Playing</text>
             {% else %}
-                <rect x="20" y="34" width="44" height="44" rx="5" fill="#e2e2de" stroke="#cacac5"/>
-                <path d="M36 45 L36 67 L53 56 Z" fill="#62625e"/>
-                <text x="42" y="94" class="status">Paused</text>
+                <circle cx="28" cy="24" r="3.5" fill="#999994"/>
+                <text x="38" y="28" class="status">Paused</text>
             {% endif %}
 
             <g mask="url(#plText)">
-                <text x="84" y="{{ 48 if has_album else 55 }}" class="title">{{ (media_info.title)|truncate(38, true, '', 0) }}</text>
-                <text x="84" y="{{ 70 if has_album else 79 }}" class="artist">{{ (media_info.artist or '')|truncate(42, true, '', 0) }}</text>
+                <text x="24" y="{{ 53 if has_album else 60 }}" class="title">{{ (media_info.title)|truncate(44, true, '', 0) }}</text>
+                <text x="24" y="{{ 74 if has_album else 83 }}" class="artist">{{ (media_info.artist or '')|truncate(48, true, '', 0) }}</text>
                 {% if has_album %}
-                <text x="84" y="89" class="album">{{ (media_info.album)|truncate(44, true, '', 0) }}</text>
+                <text x="24" y="94" class="album">{{ (media_info.album)|truncate(50, true, '', 0) }}</text>
                 {% endif %}
             </g>
 
             {% if media_info.album_art_b64 %}
-                <image href="data:image/png;base64,{{ media_info.album_art_b64 }}"
-                       x="304" y="16" width="80" height="88" clip-path="url(#plArt)"
+                <image href="{{ media_info.album_art_data_uri }}"
+                       x="316" y="18" width="68" height="84" clip-path="url(#plArt)"
                        preserveAspectRatio="xMidYMid slice"/>
             {% else %}
-                <rect x="304" y="16" width="80" height="88" rx="4" fill="#e2e2de"/>
-                <text x="344" y="68" text-anchor="middle" font-size="28" fill="#9a9a94">♪</text>
+                <rect x="316" y="18" width="68" height="84" rx="4" fill="#e2e2de"/>
+                <text x="350" y="68" text-anchor="middle" font-size="26" fill="#9a9a94">♪</text>
             {% endif %}
         {% else %}
-            <rect x="20" y="34" width="44" height="44" rx="5" fill="#e2e2de" stroke="#cacac5"/>
-            <path d="M36 45 L36 67 L53 56 Z" fill="#8b8b85"/>
-            <text x="84" y="65" class="no-media">Nothing is playing</text>
-            <rect x="304" y="16" width="80" height="88" rx="4" fill="#e2e2de"/>
-            <text x="344" y="68" text-anchor="middle" font-size="28" fill="#aaa9a3">♪</text>
+            <text x="24" y="65" class="no-media">Nothing is playing</text>
+            <rect x="316" y="18" width="68" height="84" rx="4" fill="#e2e2de"/>
+            <text x="350" y="68" text-anchor="middle" font-size="26" fill="#aaa9a3">♪</text>
         {% endif %}
     </g>
 </svg>
