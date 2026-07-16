@@ -1,101 +1,62 @@
 <svg width="320" height="400" viewBox="0 0 320 400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Now playing">
     <defs>
-        <linearGradient id="mcBg" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#1d1d1d"/>
-            <stop offset="100%" stop-color="#121212"/>
-        </linearGradient>
-        <linearGradient id="mcArtFade" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
-            <stop offset="100%" stop-color="#000000" stop-opacity="0.55"/>
-        </linearGradient>
-        <clipPath id="mcArt">
-            <rect x="16" y="16" width="288" height="288" rx="16"/>
+        <clipPath id="mcCard">
+            <rect x="0.5" y="0.5" width="319" height="399" rx="8"/>
         </clipPath>
         <linearGradient id="mcFade">
-            <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
-            <stop offset="0.07" stop-color="#ffffff"/>
-            <stop offset="0.93" stop-color="#ffffff"/>
+            <stop offset="0.9" stop-color="#ffffff"/>
             <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
-        <mask id="mcText"><rect x="16" y="318" width="288" height="82" fill="url(#mcFade)"/></mask>
-        <filter id="mcShadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.5"/>
-        </filter>
+        <mask id="mcText"><rect x="20" y="290" width="280" height="98" fill="url(#mcFade)"/></mask>
     </defs>
 
     <style>
-        .container { font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-        .title  { font-size: 21px; font-weight: 700; fill: #ffffff; text-anchor: middle; letter-spacing: -0.3px; }
-        .artist { font-size: 15px; font-weight: 500; fill: #b3b3b3; text-anchor: middle; }
-        .album  { font-size: 12px; font-weight: 400; fill: #7d7d7d; text-anchor: middle; }
-        .badge-label { font-size: 9px; font-weight: 700; letter-spacing: 1.1px; }
-        .no-media { font-size: 18px; font-weight: 500; fill: #7d7d7d; text-anchor: middle; }
+        .container { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .title { font-size: 22px; font-weight: 700; fill: #f7f7f5; letter-spacing: -0.35px; }
+        .artist { font-size: 15px; font-weight: 500; fill: #b5b5b0; }
+        .album { font-size: 12px; font-weight: 400; fill: #777773; }
+        .status { font-size: 11px; font-weight: 600; fill: #b5b5b0; }
+        .status-playing { fill: #1ed760; }
+        .no-media { font-size: 16px; font-weight: 500; fill: #8a8a85; text-anchor: middle; }
         {{ custom_css | safe }}
     </style>
 
-    <rect width="320" height="400" rx="22" fill="url(#mcBg)"/>
+    <rect class="background" x="0.5" y="0.5" width="319" height="399" rx="8" fill="#151515" stroke="#30302e"/>
 
-    <g class="container">
+    <g class="container" clip-path="url(#mcCard)">
         {% if media_info and media_info.title %}
             {% set has_album = media_info.album %}
-            <!-- Album art -->
             {% if media_info.album_art_b64 %}
                 <image href="data:image/png;base64,{{ media_info.album_art_b64 }}"
-                       x="16" y="16" width="288" height="288" clip-path="url(#mcArt)"
-                       preserveAspectRatio="xMidYMid slice" filter="url(#mcShadow)"/>
-                <rect x="16" y="216" width="288" height="88" fill="url(#mcArtFade)" clip-path="url(#mcArt)"/>
-                <rect x="16" y="16" width="288" height="288" rx="16" fill="none" stroke="#ffffff" stroke-opacity="0.08"/>
+                       x="0" y="0" width="320" height="280"
+                       preserveAspectRatio="xMidYMid slice"/>
             {% else %}
-                <rect x="16" y="16" width="288" height="288" rx="16" fill="#262626" filter="url(#mcShadow)"/>
-                <g transform="translate(160,160) scale(5)" fill="#4d4d4d">
-                    <path d="M-2.6 -12 L9 -14 L9 -9 L-2.6 -7 Z"/>
-                    <rect x="-2.6" y="-12" width="2.2" height="15.5" rx="1.1"/>
-                    <rect x="6.8" y="-14" width="2.2" height="15.5" rx="1.1"/>
-                    <ellipse cx="-5" cy="3.8" rx="4" ry="3"/>
-                    <ellipse cx="5" cy="1.8" rx="4" ry="3"/>
-                </g>
+                <rect x="0" y="0" width="320" height="280" fill="#242422"/>
+                <text x="160" y="158" text-anchor="middle" font-size="58" fill="#555550">♪</text>
             {% endif %}
 
-            <!-- Now playing badge on artwork -->
+            <line x1="0" y1="280.5" x2="320" y2="280.5" stroke="#30302e"/>
+
             {% if media_info.is_playing %}
-                <g transform="translate(32, 264)">
-                    <rect width="128" height="28" rx="14" fill="#000000" fill-opacity="0.5"/>
-                    <g transform="translate(16, 20)" fill="#1ed760">
-                        <rect x="0"  width="3" rx="1.5" y="-7"  height="7" ><animate attributeName="height" values="5;13;5"  dur="0.9s"  begin="0s"     repeatCount="indefinite"/><animate attributeName="y" values="-5;-13;-5"  dur="0.9s"  begin="0s"     repeatCount="indefinite"/></rect>
-                        <rect x="6"  width="3" rx="1.5" y="-11" height="11"><animate attributeName="height" values="11;5;11" dur="0.8s"  begin="-0.3s"  repeatCount="indefinite"/><animate attributeName="y" values="-11;-5;-11" dur="0.8s"  begin="-0.3s"  repeatCount="indefinite"/></rect>
-                        <rect x="12" width="3" rx="1.5" y="-9"  height="9" ><animate attributeName="height" values="7;14;7"  dur="1.05s" begin="-0.15s" repeatCount="indefinite"/><animate attributeName="y" values="-7;-14;-7"  dur="1.05s" begin="-0.15s" repeatCount="indefinite"/></rect>
-                    </g>
-                    <text x="38" y="18" class="badge-label" fill="#1ed760">NOW PLAYING</text>
-                </g>
+                <circle class="status-playing" cx="22" cy="303" r="3.5"/>
+                <text x="32" y="307" class="status">Playing now</text>
             {% else %}
-                <g transform="translate(32, 264)">
-                    <rect width="96" height="28" rx="14" fill="#000000" fill-opacity="0.5"/>
-                    <g transform="translate(15, 11)" fill="#cfcfcf">
-                        <rect x="0" y="0" width="3" height="6" rx="1"/>
-                        <rect x="5" y="0" width="3" height="6" rx="1"/>
-                    </g>
-                    <text x="32" y="18" class="badge-label" fill="#cfcfcf">PAUSED</text>
-                </g>
+                <circle cx="22" cy="303" r="3.5" fill="#686864"/>
+                <text x="32" y="307" class="status">Paused</text>
             {% endif %}
 
-            <!-- Text -->
             <g mask="url(#mcText)">
-                <text x="160" y="340" class="title">{{ (media_info.title)|truncate(44, true, '', 0) }}</text>
-                <text x="160" y="364" class="artist">{{ (media_info.artist or '')|truncate(50, true, '', 0) }}</text>
+                <text x="20" y="338" class="title">{{ (media_info.title)|truncate(34, true, '', 0) }}</text>
+                <text x="20" y="362" class="artist">{{ (media_info.artist or '')|truncate(42, true, '', 0) }}</text>
                 {% if has_album %}
-                <text x="160" y="385" class="album">{{ (media_info.album)|truncate(56, true, '', 0) }}</text>
+                <text x="20" y="384" class="album">{{ (media_info.album)|truncate(48, true, '', 0) }}</text>
                 {% endif %}
             </g>
         {% else %}
-            <rect x="16" y="16" width="288" height="288" rx="16" fill="#262626"/>
-            <g transform="translate(160,160) scale(5)" fill="#3d3d3d">
-                <path d="M-2.6 -12 L9 -14 L9 -9 L-2.6 -7 Z"/>
-                <rect x="-2.6" y="-12" width="2.2" height="15.5" rx="1.1"/>
-                <rect x="6.8" y="-14" width="2.2" height="15.5" rx="1.1"/>
-                <ellipse cx="-5" cy="3.8" rx="4" ry="3"/>
-                <ellipse cx="5" cy="1.8" rx="4" ry="3"/>
-            </g>
-            <text x="160" y="360" class="no-media">No music playing</text>
+            <rect x="0" y="0" width="320" height="280" fill="#242422"/>
+            <text x="160" y="158" text-anchor="middle" font-size="58" fill="#4d4d49">♪</text>
+            <line x1="0" y1="280.5" x2="320" y2="280.5" stroke="#30302e"/>
+            <text x="160" y="347" class="no-media">Nothing is playing</text>
         {% endif %}
     </g>
 </svg>

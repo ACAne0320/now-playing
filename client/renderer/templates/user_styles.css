@@ -1,36 +1,32 @@
-/* 
+/*
  * User custom CSS example
- * Place your custom styles here to override the default template styles
+ * Pass these rules through the custom_css query parameter.
  */
 
-/* Example: Custom color scheme */
-.background { 
-    fill: #0d1117; 
+/* Keep surfaces solid and let one accent carry playback state. */
+.background {
+    fill: #171717;
 }
 
-.title { 
-    fill: #f0f6fc; 
-    font-weight: 700; 
+.title {
+    fill: #f7f7f5;
+    font-weight: 700;
 }
 
-.artist { 
-    fill: #7d8590; 
+.artist {
+    fill: #b5b5b0;
 }
 
-.album { 
-    fill: #6e7681; 
+.album {
+    fill: #787874;
 }
 
-.status-playing { 
-    fill: #238636; 
+.status-playing {
+    fill: #1ed760;
+    stroke: #1ed760;
 }
 
-/* Example: Custom font */
-.container { 
-    font-family: 'JetBrains Mono', monospace; 
-}
-
-/* Example: Add glow effect to playing status */
-.status-playing { 
-    filter: drop-shadow(0 0 3px #238636); 
+/* Use a UI sans for card text; reserve monospace for code samples. */
+.container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
