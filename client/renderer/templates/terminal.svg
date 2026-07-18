@@ -14,6 +14,11 @@
                 <feMergeNode in="SourceGraphic"/>
             </feMerge>
         </filter>
+        <linearGradient id="termFade">
+            <stop offset="0.88" stop-color="#ffffff"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <mask id="termMask"><rect x="20" y="40" width="372" height="132" fill="url(#termFade)"/></mask>
     </defs>
 
     <style>
@@ -44,6 +49,7 @@
     <g class="term" filter="url(#termGlow)">
         {% if media_info and media_info.title %}
         {% set state_y = 141 if media_info.album else 120 %}
+        <g mask="url(#termMask)">
         <text x="20" y="56"><tspan class="tp">$ </tspan><tspan class="tc">now-playing --live</tspan></text>
         <text x="20" y="78"><tspan class="tl">TRACK  : </tspan><tspan class="tv">{{ (media_info.title)|truncate(38, true, '', 0) }}</tspan></text>
         <text x="20" y="99"><tspan class="tl">ARTIST : </tspan><tspan class="tv">{{ (media_info.artist or '')|truncate(38, true, '', 0) }}</tspan></text>
@@ -52,6 +58,7 @@
         {% endif %}
         <text x="20" y="{{ state_y }}"><tspan class="tl">STATE  : </tspan>{% if media_info.is_playing %}<tspan class="tv">» PLAYING</tspan>{% else %}<tspan class="tw">|| PAUSED</tspan>{% endif %}</text>
         <text x="20" y="{{ state_y + 21 }}" class="tp">$</text>
+        </g>
         {% if media_info.is_playing %}
         <rect class="blink" x="31" y="{{ state_y + 11 }}" width="8" height="13" fill="#8fffa0"/>
         {% else %}

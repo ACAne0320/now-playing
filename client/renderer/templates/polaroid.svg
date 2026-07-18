@@ -35,8 +35,16 @@
     <g transform="rotate(-4 160 168)">
         <rect x="44" y="30" width="232" height="292" rx="3" fill="#f8f6f1" stroke="#e4dfd2"/>
         {% if media_info and media_info.title and media_info.album_art_b64 %}
+        {% if media_info.album_art_is_at_least(240, 240) %}
         <image href="{{ media_info.album_art_data_uri }}" x="60" y="46" width="200" height="200"
                clip-path="url(#plPhoto)" preserveAspectRatio="xMidYMid slice"/>
+        {% else %}
+        {% set fit = media_info.album_art_fit(120, 120) %}
+        <rect x="60" y="46" width="200" height="200" fill="#e6e2d9"/>
+        <image href="{{ media_info.album_art_data_uri }}"
+               x="{{ 60 + (200 - fit[0]) // 2 }}" y="{{ 46 + (200 - fit[1]) // 2 }}"
+               width="{{ fit[0] }}" height="{{ fit[1] }}"/>
+        {% endif %}
         <rect x="60" y="46" width="200" height="200" fill="none" stroke="#000000" stroke-opacity="0.12"/>
         {% else %}
         <rect x="60" y="46" width="200" height="200" fill="url(#plEmpty)"/>
