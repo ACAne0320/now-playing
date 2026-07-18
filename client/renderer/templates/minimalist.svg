@@ -13,6 +13,9 @@
         .artist { font-size: 12px; font-weight: 400; fill: #74746f; }
         .status-playing { stroke: #238636; fill: #238636; }
         .no-media { font-size: 13px; font-weight: 500; fill: #85857f; }
+        .eq rect { transform-box: fill-box; transform-origin: 50% 100%; animation: min-eq 0.9s ease-in-out infinite alternate; }
+        @keyframes min-eq { from { transform: scaleY(0.3); } to { transform: scaleY(1); } }
+        @media (prefers-reduced-motion: reduce) { .eq rect { animation: none; } }
         {{ custom_css | safe }}
     </style>
 
@@ -30,7 +33,11 @@
             </g>
 
             {% if media_info.is_playing %}
-                <path class="status-playing" d="M272 34 L272 46 L282 40 Z" stroke="none"/>
+                <g class="eq status-playing" stroke="none">
+                    <rect x="270" y="34" width="3.5" height="14" rx="1" style="animation-duration: 0.7s;"/>
+                    <rect x="276" y="34" width="3.5" height="14" rx="1" style="animation-duration: 0.9s; animation-delay: -0.3s;"/>
+                    <rect x="282" y="34" width="3.5" height="14" rx="1" style="animation-duration: 0.8s; animation-delay: -0.15s;"/>
+                </g>
             {% else %}
                 <g fill="#999994">
                     <rect x="272" y="34" width="3" height="12" rx="1"/>

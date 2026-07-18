@@ -30,7 +30,7 @@ class Renderer:
     def render_svg(
         self,
         media_info: Optional[MediaInfo] = None,
-        template_name: str = "default",
+        template_name: str = "turntable",
         custom_css: Optional[str] = None,
     ) -> str:
         """

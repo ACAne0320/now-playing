@@ -18,50 +18,49 @@ A cross-platform music information service that displays currently playing media
 
 ## Template Gallery
 
-Pick a style by adding `?template=<name>` to the card URL. A few favorites are shown below — expand the section underneath for the rest.
+Pick a style by adding `?template=<name>` to the card URL. The six designs below are the current lineup — expand the section underneath for the legacy set.
 
 <table>
   <tr>
     <td align="center" width="50%">
-      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=sky" alt="sky template" width="400"><br>
-      <sub><code>sky</code></sub>
+      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=turntable" alt="turntable template" width="400"><br>
+      <sub><code>turntable</code> · spinning vinyl, parking tonearm</sub>
     </td>
     <td align="center" width="50%">
-      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=default" alt="default template" width="400"><br>
-      <sub><code>default</code></sub>
+      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=terminal" alt="terminal template" width="400"><br>
+      <sub><code>terminal</code> · phosphor CRT with blinking cursor</sub>
     </td>
   </tr>
   <tr>
-    <td align="center" colspan="2">
-      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=neo" alt="neo template" width="400"><br>
-      <sub><code>neo</code></sub>
+    <td align="center" width="50%">
+      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=poster" alt="poster template" width="400"><br>
+      <sub><code>poster</code> · swiss brutalist typography</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=neon" alt="neon template" width="400"><br>
+      <sub><code>neon</code> · glowing sign, CLOSED when idle</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=ticket" alt="ticket template" width="400"><br>
+      <sub><code>ticket</code> · concert stub with barcode</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=polaroid" alt="polaroid template" width="320"><br>
+      <sub><code>polaroid</code> · taped instant photo</sub>
     </td>
   </tr>
 </table>
 
-<p align="center">
-  <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=music-card" alt="music-card template" width="320"><br>
-  <sub><code>music-card</code></sub>
-</p>
-
 <details>
-  <summary><b>Show the other 4 templates »</b></summary>
+  <summary><b>Show the 2 classic templates »</b></summary>
   <br>
   <table>
     <tr>
       <td align="center" width="50%">
-        <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=rounded" alt="rounded template" width="400"><br>
-        <sub><code>rounded</code></sub>
-      </td>
-      <td align="center" width="50%">
-        <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=player" alt="player template" width="400"><br>
-        <sub><code>player</code></sub>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">
-        <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=rounded-simple" alt="rounded-simple template" width="400"><br>
-        <sub><code>rounded-simple</code></sub>
+        <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=music-card" alt="music-card template" width="320"><br>
+        <sub><code>music-card</code> · full-bleed portrait artwork</sub>
       </td>
       <td align="center" bgcolor="#e9edf1">
         <img src="https://now-playing-acane.vercel.app/now-playing.svg?template=minimalist" alt="minimalist template" width="300"><br>
@@ -204,7 +203,7 @@ Send local media data to remote server:
     "server_url": "https://yours-now-playing-serverp",
     "api_key": "your-secure-api-key",
     "poll_interval": 10,
-    "template": "default"
+    "template": "turntable"
   }
 }
 
@@ -249,7 +248,7 @@ cp config.example.json config.json
     "server_url": "http://localhost:8000",  // Remote server URL
     "api_key": "your-secret-key",           // Client API key
     "poll_interval": 10,                    // Client polling interval
-    "template": "default"                   // Default template
+    "template": "turntable"                 // Default template
   }
 }
 ```
@@ -272,7 +271,7 @@ export ENABLE_ALBUM_ART=false
 export NOW_PLAYING_SERVER_URL=https://your-app.vercel.app
 export NOW_PLAYING_CLIENT_API_KEY=your-client-key
 export NOW_PLAYING_CLIENT_POLL_INTERVAL=15
-export NOW_PLAYING_TEMPLATE=modern-card
+export NOW_PLAYING_TEMPLATE=turntable
 ```
 
 ## Customization
@@ -281,11 +280,14 @@ export NOW_PLAYING_TEMPLATE=modern-card
 
 Available templates:
 
-- `default`: Full-featured with album art and progress
-- `minimalist`: Clean and simple design
-- `rounded`: Modern rounded design with clean layout
-- `music-card`: Spotify-like card with animated sound bars
-- etc..
+- `turntable`: Spinning vinyl deck with a tonearm that parks when paused
+- `terminal`: Phosphor-green CRT terminal with scanlines and a blinking cursor
+- `poster`: Swiss brutalist typographic poster
+- `neon`: Neon sign that switches to CLOSED when nothing is playing
+- `ticket`: Concert ticket stub with perforation, barcode and PAUSED stamp
+- `polaroid`: Taped instant photo with handwritten caption
+- `music-card`: Full-bleed portrait artwork card
+- `minimalist`: Transparent text-only overlay for OBS/streaming
 
 ```bash
 # Use specific template

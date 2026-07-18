@@ -165,7 +165,7 @@ async def root():
 
 @app.get("/now-playing.svg")
 async def get_now_playing_svg(
-    template: str = "default",
+    template: str = "turntable",
     custom_css: Optional[str] = None,
     user_id: Optional[str] = None,
     poller: Optional[BasePoller] = Depends(get_poller),
@@ -346,7 +346,7 @@ async def get_templates(renderer: Optional[Renderer] = Depends(get_renderer)):
     templates = renderer.list_templates()
     return {
         "templates": templates,
-        "current_template": "default",
+        "current_template": "turntable",
         "timestamp": datetime.now().isoformat()
     }
 

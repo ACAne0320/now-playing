@@ -106,7 +106,7 @@ class NowPlayingEditor {
             console.error('Failed to load templates:', error);
             this.updateStatus(window.i18n ? window.i18n.t('errorLoadingTemplates') : 'Failed to load templates, using default templates', 'error');
             // Use default templates
-            this.templates = ['default', 'modern-card', 'glassmorphism', 'minimalist'];
+            this.templates = ['turntable', 'terminal', 'poster', 'neon', 'ticket', 'polaroid', 'music-card', 'minimalist'];
             this.renderTemplateSelect();
         }
     }

@@ -1,0 +1,74 @@
+<svg width="400" height="180" viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Now playing">
+    <defs>
+        <clipPath id="poArt">
+            <rect x="292" y="34" width="84" height="84"/>
+        </clipPath>
+        <linearGradient id="poFade">
+            <stop offset="0.85" stop-color="#ffffff"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <mask id="poText"><rect x="24" y="52" width="260" height="82" fill="url(#poFade)"/></mask>
+    </defs>
+
+    <style>
+        .container { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        .issue { font-size: 10px; font-weight: 800; letter-spacing: 1px; fill: #111111; }
+        .strip { font-size: 8px; font-weight: 700; letter-spacing: 2px; fill: #111111; opacity: 0.75; }
+        .title { font-size: 27px; font-weight: 900; letter-spacing: -0.5px; fill: #111111; }
+        .artist { font-size: 12px; font-weight: 700; letter-spacing: 3px; fill: #111111; }
+        .album { font-size: 10.5px; font-weight: 400; letter-spacing: 2px; fill: #5a564c; }
+        .meta { font-size: 8.5px; font-weight: 600; letter-spacing: 1.5px; fill: #5a564c; }
+        .meta-hot { fill: #d63c14; }
+        {{ custom_css | safe }}
+    </style>
+
+    <rect class="background" x="1" y="1" width="398" height="178" fill="#f4f1ea" stroke="#111111" stroke-width="2"/>
+    <rect x="2" y="2" width="396" height="7" fill="#d63c14"/>
+
+    <g class="container">
+        <text x="24" y="30" class="issue">№ 01</text>
+        <text x="366" y="30" text-anchor="end" class="issue">SIDE A / 33⅓</text>
+        <g transform="translate(387,166) rotate(-90)">
+            <text x="0" y="0" class="strip">NOW PLAYING · SIDE A</text>
+        </g>
+
+        {% if media_info and media_info.title %}
+        {% set has_art = media_info.album_art_b64 %}
+        {% if has_art %}
+        <rect x="297" y="39" width="84" height="84" fill="#111111"/>
+        <image href="{{ media_info.album_art_data_uri }}" x="292" y="34" width="84" height="84"
+               clip-path="url(#poArt)" preserveAspectRatio="xMidYMid slice"/>
+        <rect x="292" y="34" width="84" height="84" fill="none" stroke="#111111" stroke-width="2"/>
+        {% else %}
+        <rect x="292" y="34" width="84" height="84" fill="none" stroke="#b7b2a6" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <text x="334" y="80" text-anchor="middle" class="album">NO ART</text>
+        {% endif %}
+
+        <g mask="url(#poText)">
+            <text x="24" y="84" class="title">{{ (media_info.title)|truncate(15 if has_art else 24, true, '', 0)|upper }}</text>
+            <text x="24" y="110" class="artist">{{ (media_info.artist or '')|truncate(24 if has_art else 34, true, '', 0)|upper }}</text>
+            {% if media_info.album %}
+            <text x="24" y="129" class="album">{{ (media_info.album)|truncate(28 if has_art else 40, true, '', 0)|upper }}</text>
+            {% endif %}
+        </g>
+
+        <line x1="24" y1="142" x2="366" y2="142" stroke="#111111" stroke-width="1"/>
+        <text x="24" y="158" class="meta">FORMAT — VINYL</text>
+        <text x="150" y="158" class="meta">SPEED — 33⅓ RPM</text>
+        {% if media_info.is_playing %}
+        <text x="268" y="158" class="meta meta-hot">STATUS — ON AIR</text>
+        {% else %}
+        <text x="268" y="158" class="meta">STATUS — PAUSED</text>
+        {% endif %}
+        {% else %}
+        <rect x="292" y="34" width="84" height="84" fill="none" stroke="#b7b2a6" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="292" y1="34" x2="376" y2="118" stroke="#b7b2a6" stroke-width="1.5"/>
+        <text x="24" y="84" class="title">SILENCE.</text>
+        <text x="24" y="110" class="artist">—</text>
+        <line x1="24" y1="142" x2="366" y2="142" stroke="#111111" stroke-width="1"/>
+        <text x="24" y="158" class="meta">FORMAT — VINYL</text>
+        <text x="150" y="158" class="meta">SPEED — 33⅓ RPM</text>
+        <text x="268" y="158" class="meta">STATUS — OFF AIR</text>
+        {% endif %}
+    </g>
+</svg>

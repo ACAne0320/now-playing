@@ -1,0 +1,96 @@
+<svg width="400" height="160" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Now playing">
+    <defs>
+        <clipPath id="ttLabel">
+            <circle cx="92" cy="80" r="20"/>
+        </clipPath>
+        <linearGradient id="ttFade">
+            <stop offset="0.85" stop-color="#ffffff"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <mask id="ttText"><rect x="182" y="26" width="212" height="104" fill="url(#ttFade)"/></mask>
+    </defs>
+
+    <style>
+        .container { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .deck-label { font-size: 9.5px; font-weight: 600; letter-spacing: 2.5px; fill: #8d7f68; }
+        .title { font-size: 21px; font-weight: 700; fill: #f0e9db; letter-spacing: -0.3px; }
+        .artist { font-size: 13px; font-weight: 500; fill: #b3a78f; }
+        .album { font-size: 11px; font-weight: 400; fill: #7d7261; }
+        .status { font-size: 9.5px; font-weight: 600; letter-spacing: 1.5px; fill: #b3a78f; }
+        .status-on { fill: #d9a441; }
+        .no-media { font-size: 15px; font-weight: 500; fill: #7d7261; }
+        .spin { transform-box: view-box; transform-origin: 92px 80px; animation: tt-spin 3.2s linear infinite; }
+        @keyframes tt-spin { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+        {{ custom_css | safe }}
+    </style>
+
+    <rect class="background" x="0.5" y="0.5" width="399" height="159" rx="10" fill="#16130f" stroke="#2e2822"/>
+    <rect x="12" y="12" width="160" height="136" rx="8" fill="#1d1813" stroke="#332b22"/>
+
+    <g class="container">
+        <!-- platter -->
+        <circle cx="92" cy="80" r="63" fill="#0e0c0a" stroke="#3a332a" stroke-width="1.5"/>
+        <circle cx="92" cy="80" r="60" fill="none" stroke="{{ '#57493a' if media_info and media_info.title else '#332b22' }}" stroke-width="3" stroke-dasharray="1.8 4.6"/>
+
+        {% if media_info and media_info.title %}
+        <g {% if media_info.is_playing %}class="spin"{% endif %}>
+            <circle cx="92" cy="80" r="56" fill="#0b0a09"/>
+            <g fill="none" stroke="#221e19" stroke-width="1">
+                <circle cx="92" cy="80" r="51"/>
+                <circle cx="92" cy="80" r="46"/>
+                <circle cx="92" cy="80" r="41"/>
+                <circle cx="92" cy="80" r="36"/>
+                <circle cx="92" cy="80" r="31"/>
+            </g>
+            <path d="M92,80 L92,26 A54,54 0 0 1 133.4,45.3 Z" fill="#f5ead6" opacity="0.05"/>
+            <path d="M92,80 L92,134 A54,54 0 0 1 50.6,114.7 Z" fill="#f5ead6" opacity="0.03"/>
+            {% if media_info.album_art_b64 %}
+            <image href="{{ media_info.album_art_data_uri }}" x="72" y="60" width="40" height="40"
+                   clip-path="url(#ttLabel)" preserveAspectRatio="xMidYMid slice"/>
+            {% else %}
+            <circle cx="92" cy="80" r="20" fill="#b03a2e"/>
+            <text x="92" y="77" text-anchor="middle" font-size="7" fill="#f0e9db" opacity="0.85">33⅓ RPM</text>
+            <text x="92" y="86" text-anchor="middle" font-size="6" fill="#f0e9db" opacity="0.6">SIDE A</text>
+            {% endif %}
+            <circle cx="92" cy="80" r="20" fill="none" stroke="#000000" stroke-opacity="0.4"/>
+        </g>
+        <circle cx="92" cy="80" r="2.6" fill="#cfc3ac"/>
+        {% else %}
+        <circle cx="92" cy="80" r="56" fill="none" stroke="#221e19" stroke-width="1" stroke-dasharray="2 4"/>
+        <circle cx="92" cy="80" r="2.6" fill="#cfc3ac"/>
+        {% endif %}
+
+        <!-- tonearm -->
+        <circle cx="152" cy="28" r="7.5" fill="#2a251f" stroke="#57493a"/>
+        <circle cx="152" cy="28" r="2.6" fill="#8d7f68"/>
+        {% if media_info and media_info.title and media_info.is_playing %}
+        <line x1="152" y1="28" x2="107" y2="57" stroke="#a89a80" stroke-width="3.5" stroke-linecap="round"/>
+        <rect x="100" y="52" width="11" height="7" rx="1.5" fill="#3a332a" stroke="#8d7f68" transform="rotate(-33 106 55)"/>
+        {% else %}
+        <line x1="152" y1="28" x2="159" y2="92" stroke="#a89a80" stroke-width="3.5" stroke-linecap="round"/>
+        <rect x="153" y="88" width="11" height="7" rx="1.5" fill="#3a332a" stroke="#8d7f68" transform="rotate(8 158 91)"/>
+        {% endif %}
+
+        {% if media_info and media_info.title %}
+        <text x="184" y="42" class="deck-label">NOW SPINNING</text>
+        <g mask="url(#ttText)">
+            <text x="184" y="{{ 70 if media_info.album else 80 }}" class="title">{{ (media_info.title)|truncate(20, true, '', 0) }}</text>
+            <text x="184" y="{{ 93 if media_info.album else 104 }}" class="artist">{{ (media_info.artist or '')|truncate(28, true, '', 0) }}</text>
+            {% if media_info.album %}
+            <text x="184" y="114" class="album">{{ (media_info.album)|truncate(32, true, '', 0) }}</text>
+            {% endif %}
+        </g>
+        {% if media_info.is_playing %}
+        <circle cx="187" cy="134" r="3" class="status-on"/>
+        <text x="196" y="138" class="status status-on">ON AIR · 33⅓ RPM</text>
+        {% else %}
+        <circle cx="187" cy="134" r="3" fill="#6b6154"/>
+        <text x="196" y="138" class="status">ARM PARKED</text>
+        {% endif %}
+        {% else %}
+        <text x="184" y="76" class="no-media">Nothing on the deck</text>
+        <text x="184" y="98" class="album">Drop the needle to begin</text>
+        {% endif %}
+    </g>
+</svg>

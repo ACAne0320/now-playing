@@ -1,0 +1,79 @@
+<svg width="400" height="150" viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Now playing">
+    <defs>
+        <clipPath id="tkArt">
+            <rect x="247" y="36" width="58" height="58"/>
+        </clipPath>
+    </defs>
+
+    <style>
+        .container { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        .header { font-size: 8.5px; font-weight: 700; letter-spacing: 2px; fill: #b0341f; }
+        .artist { font-size: 20px; font-weight: 800; letter-spacing: 0.5px; fill: #211c12; }
+        .title { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 14.5px; fill: #3a3220; }
+        .meta { font-size: 8px; font-weight: 600; letter-spacing: 1px; fill: #6e6046; }
+        .live { fill: #b0341f; }
+        .stub { font-size: 10.5px; font-weight: 800; letter-spacing: 1px; fill: #b0341f; }
+        .stubno { font-size: 8px; font-weight: 600; letter-spacing: 1px; fill: #8a7a52; }
+        .stamp { font-size: 13px; font-weight: 800; letter-spacing: 3px; fill: #b0341f; }
+        .gone { font-size: 16px; font-weight: 800; letter-spacing: 1px; fill: #8a7a52; }
+        {{ custom_css | safe }}
+    </style>
+
+    <rect class="background" x="0" y="0" width="400" height="150" rx="10" fill="#0f1014"/>
+
+    <!-- ticket body -->
+    <rect x="16" y="18" width="368" height="114" rx="10" fill="#f3ead0" stroke="#d8c9a3"/>
+    <circle cx="322" cy="18" r="9" fill="#0f1014"/>
+    <circle cx="322" cy="132" r="9" fill="#0f1014"/>
+    <line x1="322" y1="29" x2="322" y2="121" stroke="#b8a67e" stroke-width="1.5" stroke-dasharray="2.5 5"/>
+
+    <g class="container">
+        <!-- stub -->
+        <g transform="translate(357,126) rotate(-90)">
+            <text x="0" y="0" class="stub">★ ADMIT ONE</text>
+            <text x="0" y="-13" class="stubno">№ 0331</text>
+        </g>
+
+        {% if media_info and media_info.title %}
+        <text x="34" y="41" class="header">★ LIVE AT THE NOW PLAYING CLUB</text>
+        <text x="34" y="68" class="artist">{{ (media_info.artist or 'UNKNOWN')|truncate(16, true, '', 0)|upper }}</text>
+        <text x="34" y="91" class="title">{{ (media_info.title)|truncate(28, true, '', 0) }}</text>
+        <text x="34" y="116" class="meta">{% if media_info.is_playing %}<tspan class="live">● LIVE · </tspan>{% endif %}GATE OPEN · ROW A · SEAT 33⅓</text>
+
+        {% if media_info.album_art_b64 %}
+        <g transform="rotate(2 276 65)">
+            <image href="{{ media_info.album_art_data_uri }}" x="247" y="36" width="58" height="58"
+                   clip-path="url(#tkArt)" preserveAspectRatio="xMidYMid slice"/>
+            <rect x="247" y="36" width="58" height="58" fill="none" stroke="#b0341f" stroke-width="2"/>
+        </g>
+        {% else %}
+        <g transform="rotate(2 276 65)">
+            <rect x="247" y="36" width="58" height="58" fill="#e4d8b8" stroke="#b0341f" stroke-width="2"/>
+            <text x="276" y="72" text-anchor="middle" font-size="22" fill="#b0341f">♪</text>
+        </g>
+        {% endif %}
+
+        <!-- barcode -->
+        <line x1="248" y1="115" x2="310" y2="115" stroke="#211c12" stroke-width="16"
+              stroke-dasharray="2.5 1.5 1 1.5 4 1.5 1 2.5 1.5 1 1.5 3 1 1 4 2 1 1.5 1 3 1.5 2 1 1 2.5"/>
+
+        {% if not media_info.is_playing %}
+        <g transform="rotate(-13 268 78)" opacity="0.88">
+            <rect x="216" y="60" width="104" height="32" rx="3" fill="none" stroke="#b0341f" stroke-width="2.5"/>
+            <rect x="219.5" y="63.5" width="97" height="25" rx="2" fill="none" stroke="#b0341f" stroke-width="1"/>
+            <text x="268" y="81" text-anchor="middle" class="stamp">PAUSED</text>
+        </g>
+        {% endif %}
+        {% else %}
+        <text x="34" y="41" class="header">★ LIVE AT THE NOW PLAYING CLUB</text>
+        <text x="34" y="72" class="gone">SHOW CANCELLED</text>
+        <text x="34" y="94" class="title">no performance tonight</text>
+        <line x1="248" y1="115" x2="310" y2="115" stroke="#8a7a52" stroke-width="16"
+              stroke-dasharray="2.5 1.5 1 1.5 4 1.5 1 2.5 1.5 1 1.5 3 1 1 4 2 1 1.5 1 3 1.5 2 1 1 2.5"/>
+        <g transform="rotate(-13 250 78)" opacity="0.88">
+            <rect x="185" y="60" width="130" height="32" rx="3" fill="none" stroke="#b0341f" stroke-width="2.5"/>
+            <text x="250" y="81" text-anchor="middle" class="stamp">CANCELLED</text>
+        </g>
+        {% endif %}
+    </g>
+</svg>

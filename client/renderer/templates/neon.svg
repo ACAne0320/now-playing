@@ -1,0 +1,82 @@
+<svg width="400" height="150" viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Now playing">
+    <defs>
+        <clipPath id="neArt">
+            <circle cx="72" cy="76" r="33"/>
+        </clipPath>
+        <radialGradient id="neWall" cx="0.3" cy="0.35" r="0.9">
+            <stop offset="0" stop-color="#101a30"/>
+            <stop offset="1" stop-color="#05070d"/>
+        </radialGradient>
+        <filter id="neBlur3" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="3"/>
+        </filter>
+        <filter id="neBlur7" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="7"/>
+        </filter>
+    </defs>
+
+    <style>
+        .container { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .label { font-size: 9.5px; font-weight: 600; letter-spacing: 4px; }
+        .title { font-size: 23px; font-weight: 800; letter-spacing: 0.5px; }
+        .artist { font-size: 13px; font-weight: 600; letter-spacing: 1px; }
+        .flicker { animation: ne-flicker 4s linear infinite; }
+        @keyframes ne-flicker { 0%, 86%, 92%, 100% { opacity: 1; } 88% { opacity: 0.82; } 90% { opacity: 0.95; } }
+        @media (prefers-reduced-motion: reduce) { .flicker { animation: none; } }
+        {{ custom_css | safe }}
+    </style>
+
+    <rect class="background" x="0.5" y="0.5" width="399" height="149" rx="10" fill="url(#neWall)" stroke="#1a2440"/>
+
+    {% set lit = media_info and media_info.title and media_info.is_playing %}
+    {% set pk = '#ff2d87' if lit else '#3f4658' %}
+    {% set pkc = '#ffe3f0' if lit else '#9aa0b0' %}
+    {% set cy = '#22d3ee' if lit else '#3f4658' %}
+    {% set cyc = '#e8feff' if lit else '#9aa0b0' %}
+    {% set am = '#ff9f1a' if lit else '#3f4658' %}
+    {% set amc = '#ffe9c9' if lit else '#9aa0b0' %}
+    {% set glo = 0.8 if lit else 0.12 %}
+
+    <g class="container">
+        {% if media_info and media_info.title %}
+        <!-- neon ring around artwork -->
+        <g {% if lit %}class="flicker"{% endif %}>
+            <circle cx="72" cy="76" r="41" fill="none" stroke="{{ cy }}" stroke-width="6" opacity="{{ glo * 0.6 }}" filter="url(#neBlur7)"/>
+            <circle cx="72" cy="76" r="41" fill="none" stroke="{{ cy }}" stroke-width="3" opacity="{{ glo }}" filter="url(#neBlur3)"/>
+            <circle cx="72" cy="76" r="41" fill="none" stroke="{{ cyc }}" stroke-width="1.3"/>
+        </g>
+        {% if media_info.album_art_b64 %}
+        <image href="{{ media_info.album_art_data_uri }}" x="39" y="43" width="66" height="66"
+               clip-path="url(#neArt)" preserveAspectRatio="xMidYMid slice"/>
+        {% else %}
+        <circle cx="72" cy="76" r="33" fill="#0b1220"/>
+        <text x="72" y="86" text-anchor="middle" font-size="26" fill="{{ cy }}">♪</text>
+        {% endif %}
+
+        <!-- sign -->
+        <text x="136" y="40" class="label" fill="none" stroke="{{ cy }}" stroke-width="1.6" opacity="{{ glo * 0.7 }}" filter="url(#neBlur3)">NOW PLAYING</text>
+        <text x="136" y="40" class="label" fill="{{ cyc }}">NOW PLAYING</text>
+
+        <text x="136" y="74" class="title" fill="none" stroke="{{ pk }}" stroke-width="5" opacity="{{ glo }}" filter="url(#neBlur7)">{{ (media_info.title)|truncate(15, true, '', 0) }}</text>
+        <text x="136" y="74" class="title" fill="none" stroke="{{ pk }}" stroke-width="2" opacity="{{ glo }}" filter="url(#neBlur3)">{{ (media_info.title)|truncate(15, true, '', 0) }}</text>
+        <text x="136" y="74" class="title" fill="{{ pkc }}">{{ (media_info.title)|truncate(15, true, '', 0) }}</text>
+
+        <text x="136" y="97" class="artist" fill="none" stroke="{{ am }}" stroke-width="3" opacity="{{ glo * 0.8 }}" filter="url(#neBlur3)">{{ (media_info.artist or '')|truncate(26, true, '', 0) }}</text>
+        <text x="136" y="97" class="artist" fill="{{ amc }}">{{ (media_info.artist or '')|truncate(26, true, '', 0) }}</text>
+
+        <line x1="136" y1="112" x2="344" y2="112" stroke="{{ pk }}" stroke-width="4" opacity="{{ glo * 0.6 }}" filter="url(#neBlur7)"/>
+        <line x1="136" y1="112" x2="344" y2="112" stroke="{{ pkc }}" stroke-width="1.4"/>
+        {% else %}
+        <!-- closed sign -->
+        <circle cx="72" cy="76" r="41" fill="none" stroke="#3f4658" stroke-width="3" opacity="0.5"/>
+        <circle cx="72" cy="76" r="33" fill="#0b1220"/>
+        <text x="72" y="86" text-anchor="middle" font-size="26" fill="#3f4658">♪</text>
+
+        <text x="136" y="70" class="title" fill="none" stroke="#ff2d87" stroke-width="5" opacity="0.7" filter="url(#neBlur7)">CLOSED</text>
+        <text x="136" y="70" class="title" fill="none" stroke="#ff2d87" stroke-width="2" opacity="0.7" filter="url(#neBlur3)">CLOSED</text>
+        <text x="136" y="70" class="title" fill="#ffe3f0">CLOSED</text>
+        <text x="136" y="93" class="artist" fill="#9aa0b0">the stage is quiet tonight</text>
+        <line x1="136" y1="108" x2="344" y2="108" stroke="#3f4658" stroke-width="1.4"/>
+        {% endif %}
+    </g>
+</svg>

@@ -58,7 +58,7 @@ class Config:
         config["client"].setdefault("poll_interval", 
             int(os.getenv("NOW_PLAYING_CLIENT_POLL_INTERVAL", "10")))
         config["client"].setdefault("template", 
-            os.getenv("NOW_PLAYING_TEMPLATE", "default"))
+            os.getenv("NOW_PLAYING_TEMPLATE", "turntable"))
         
         return config
     

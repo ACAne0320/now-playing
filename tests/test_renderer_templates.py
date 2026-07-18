@@ -7,14 +7,14 @@ from client.models import MediaInfo
 from client.renderer.engine import Renderer
 
 TEMPLATES = {
-    "default",
     "minimalist",
     "music-card",
-    "neo",
-    "player",
-    "rounded",
-    "rounded-simple",
-    "sky",
+    "neon",
+    "polaroid",
+    "poster",
+    "terminal",
+    "ticket",
+    "turntable",
 }
 
 

@@ -34,10 +34,3 @@ def test_music_card_keeps_full_bleed_for_large_sources() -> None:
     assert '<svg width="320" height="400"' in svg
     assert 'class="artwork artwork-fill"' in svg
     assert 'class="artwork artwork-inset"' not in svg
-
-
-def test_rounded_uses_inset_artwork_for_small_sources() -> None:
-    svg = render("rounded", 100, 100)
-
-    assert 'class="artwork artwork-inset"' in svg
-    assert 'width="88" height="88"' in svg
